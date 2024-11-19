@@ -1,13 +1,24 @@
 package com.edgaritzak.imageBoard.controller;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import com.edgaritzak.imageBoard.dto.PostDTO;
 import com.edgaritzak.imageBoard.service.PostService;
@@ -21,6 +32,12 @@ public class PostController {
 	@Autowired
 	private PostService postSvc;
 	
+	@GetMapping("/posts")
+	public String posts(Model model) {
+		model.addAttribute("posts",postSvc.findAllMainPosts());
+		return "posts";
+	}
+	
 	@GetMapping("/")
 	public String homePage() {
 		return "home";
@@ -33,6 +50,27 @@ public class PostController {
 		postSvc.processNewPost(postDto, image);
 		return "postedSuccessfully";
 	}
+	
+	 @GetMapping("/imageController")
+	 public String imageController() {
+		 return "imageController";
+	 }
+    
+    @GetMapping("/image/{imageName}")
+    @ResponseBody
+    public ResponseEntity<Resource> getImage(@PathVariable String imageName) throws IOException {
+    	String IMAGE_DIR = "src\\main\\uploaded_images\\";
+        Path imagePath = Paths.get(IMAGE_DIR).resolve(imageName).normalize();
+        Resource resource = new UrlResource(imagePath.toUri());
+        if (resource.exists() || resource.isReadable()) {
+        	String contentType = Files.probeContentType(imagePath);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(resource);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 	
 	public String getCookie(HttpServletRequest request, HttpServletResponse response) {
 		String idPoster;

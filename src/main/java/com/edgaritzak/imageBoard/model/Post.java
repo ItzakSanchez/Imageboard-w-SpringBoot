@@ -37,6 +37,8 @@ public class Post {
 	private boolean isPinned;
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
+	@Column(name = "response_count")
+	private int responseCount;
 	/*POST CONSTRUCTOR*/
 	public Post() {}
 	
@@ -51,6 +53,7 @@ public class Post {
 		this.parentId = builder.parentId;
 		this.isPinned = builder.isPinned;
 		this.updatedAt = builder.updatedAt;
+		this.responseCount = builder.responseCount;
 	}
 	
 	/*BUILDER*/
@@ -65,6 +68,7 @@ public class Post {
 		private Long parentId;
 		private boolean isPinned; 
 		private LocalDateTime updatedAt;
+		private int responseCount;
 		
 		/*BUILDER CONSTRUCTOR*/
 		public Builder(PostDTO postDTO) {
@@ -74,6 +78,8 @@ public class Post {
 			this.creationDateTime = LocalDateTime.now();
 			this.updatedAt = LocalDateTime.now();
 			this.nickname = "Anonymous";
+			this.responseCount = 0;
+			
 		}
 		
 		public Builder nickname(String nickname) {
@@ -133,6 +139,11 @@ public class Post {
 	public LocalDateTime getUpdatedAt() {
 		return creationDateTime;
 	}
+	public int getResponseCount() {
+		return responseCount;
+	}
+
+
 
 	/*SETTERS*/
 	public void setIsPinned(boolean isPinned) {
@@ -144,13 +155,19 @@ public class Post {
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
+	public void setResponseCount(int responseCount) {
+		this.responseCount = responseCount;
+	}
 
 	@Override
 	public String toString() {
 		return "Post [id=" + id + ", idposter=" + idposter + ", nickname=" + nickname + ", title=" + title
 				+ ", content=" + content + ", imagePath=" + imagePath + ", creationDateTime=" + creationDateTime
-				+ ", parentId=" + parentId + ", isPinned=" + isPinned + ", updatedAt=" + updatedAt + "]";
+				+ ", parentId=" + parentId + ", isPinned=" + isPinned + ", updatedAt=" + updatedAt + ", responseCount="
+				+ responseCount + "]";
 	}
+
+
 	
 	
 }

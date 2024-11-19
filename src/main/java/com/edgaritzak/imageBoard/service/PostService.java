@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -25,6 +26,15 @@ public class PostService {
 	@Autowired
 	public PostService(PostRepo postRepo) {
 		this.postRepo = postRepo;
+	}
+	
+	
+	public List<Post> findAllMainPosts(){
+		try {
+			return postRepo.findAllMainPosts();
+		}catch(NoSuchElementException nsee) {
+			throw new NoSuchElementException("No main post found: "+nsee);
+		}
 	}
 	
 	@Transactional
@@ -73,9 +83,9 @@ public class PostService {
 		}
 		
 		String randomUuid = UUID.randomUUID()+"-"+image.getOriginalFilename();
-		Path imagePath = Paths.get("src/main/resources/uploads/images/"+randomUuid);
+		Path imagePath = Paths.get("src/main/resources/static/uploads/images/"+randomUuid);
 		Files.write(imagePath, image.getBytes());
-		return String.valueOf(imagePath);
+		return String.valueOf("uploads\\images\\"+randomUuid);
 	}
 	
 	/*UPDATE IMAGE PATH*/
@@ -90,9 +100,11 @@ public class PostService {
 	
 	/*UPDATE PARENT POST*/
 	public boolean updateParentPost(Post post) {
+		//if the post has a parent (is a reply) then update parent post date and reply count
 		if (post.getParentId() != 0){
 			Post parentPost = postRepo.findById(post.getParentId()).orElseThrow(()-> new NoSuchElementException("Parent post not found for updating last update date"));
 			parentPost.setUpdateLastUpdate();
+			parentPost.setResponseCount(parentPost.getResponseCount()+1);
 			
 			try {
 				postRepo.save(parentPost);
