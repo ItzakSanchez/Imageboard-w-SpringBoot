@@ -40,8 +40,8 @@ public class PostService {
 	@Transactional
 	public Post processNewPost(PostDTO postDTO, MultipartFile image) throws IOException {
 		Post post = savePost(postDTO);
-		String path = saveImage(image);
-		post = updateImagePath(post, path);
+		String filename = saveImage(image);
+		post = updateImagePath(post, filename);
 		updateParentPost(post);
 		return post;
 	}
@@ -83,9 +83,9 @@ public class PostService {
 		}
 		
 		String randomUuid = UUID.randomUUID()+"-"+image.getOriginalFilename();
-		Path imagePath = Paths.get("src/main/resources/static/uploads/images/"+randomUuid);
+		Path imagePath = Paths.get("src/main/uploaded_images/"+randomUuid);
 		Files.write(imagePath, image.getBytes());
-		return String.valueOf("uploads\\images\\"+randomUuid);
+		return String.valueOf(randomUuid);
 	}
 	
 	/*UPDATE IMAGE PATH*/

@@ -12,8 +12,8 @@
         <p th:text="${post.nickname}"></p>
         <p th:text="${post.creationDateTime}"></p>
         <p th:text="${post.content}"></p>
-        <img th:src="@{${post.imagePath}}" style="max-width: 310px; height: 310px"/>
-        <p th:text="${post.imagePath}"></p>
+        <img th:src="'image/'+${post.imagePath}" style="max-width: 310px; height: 310px"/>
+        <p th:text="'../image/'+${post.imagePath}"></p>
    </div>
 </body>
 </html>

@@ -55,12 +55,18 @@ public class PostController {
 	 public String imageController() {
 		 return "imageController";
 	 }
+	 
+	 @GetMapping("/cookie")
+	 public String cookie(Model model, HttpServletRequest request, HttpServletResponse response) {
+		 model.addAttribute("cookie",getCookie(request, response));
+		 return "cookie";
+	 }
     
-    @GetMapping("/image/{imageName}")
+    @GetMapping("/image/{filename}")
     @ResponseBody
-    public ResponseEntity<Resource> getImage(@PathVariable String imageName) throws IOException {
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) throws IOException {
     	String IMAGE_DIR = "src\\main\\uploaded_images\\";
-        Path imagePath = Paths.get(IMAGE_DIR).resolve(imageName).normalize();
+        Path imagePath = Paths.get(IMAGE_DIR).resolve(filename).normalize();
         Resource resource = new UrlResource(imagePath.toUri());
         if (resource.exists() || resource.isReadable()) {
         	String contentType = Files.probeContentType(imagePath);
