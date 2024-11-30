@@ -2,8 +2,7 @@ package com.edgaritzak.imageBoard.model;
 
 import java.time.LocalDateTime;
 
-import com.edgaritzak.imageBoard.dto.PostDTO;
-
+import com.edgaritzak.imageBoard.dto.PostCreationDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -71,10 +70,10 @@ public class Post {
 		private int responseCount;
 		
 		/*BUILDER CONSTRUCTOR*/
-		public Builder(PostDTO postDTO) {
-			this.idposter = postDTO.getIdposter();
-			this.content = postDTO.getContent();
-			this.parentId = postDTO.getParentId();
+		public Builder(PostCreationDTO postCreationDTO) {
+			this.idposter = postCreationDTO.getIdposter();
+			this.content = postCreationDTO.getContent();
+			this.parentId = postCreationDTO.getParentId();
 			this.creationDateTime = LocalDateTime.now();
 			this.updatedAt = LocalDateTime.now();
 			this.nickname = "Anonymous";

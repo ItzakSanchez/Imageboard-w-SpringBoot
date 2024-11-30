@@ -6,8 +6,9 @@
     <title>Error page</title>
 </head>
 <body>
-    <h1>404 - Not Found QQ</h1>
-    <p>Page Not found</p>
+    <h1>404 - Not Found ༼ つ ◕_◕ ༽つ</h1>
+    <p></p>
+	<p th:text="'Page Not found - ' +${errorMessage} ?: ' '"></p>
 	<p>Return to <a th:href="@{/}">home page</a></p>
 </body>
 </html>

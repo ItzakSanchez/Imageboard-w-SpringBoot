@@ -10,10 +10,13 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.edgaritzak.imageBoard.dto.PostDTO;
+import com.edgaritzak.imageBoard.dto.PostCreationDTO;
 import com.edgaritzak.imageBoard.model.Post;
 import com.edgaritzak.imageBoard.repository.PostRepo;
 
@@ -23,23 +26,39 @@ import jakarta.transaction.Transactional;
 public class PostService {
 	
 	private PostRepo postRepo; 
+	
+	private final int MAX_NUMBER_PAGES = 9;
+	private final int MAX_RESPONSES = 10;
+	private final int PAGE_SIZE = 2;
+	
 	@Autowired
 	public PostService(PostRepo postRepo) {
 		this.postRepo = postRepo;
 	}
-	
-	
-	public List<Post> findAllMainPosts(){
+	/*TODO 
+	* FETCH LAST 3 RESPONSES FOR EACH THREAD"
+	* CREATE DTO OR USE A LIST OF LISTS 
+	**/
+	public List<Post> findAllMainPosts(int page){
+		
+		int numberOfPages = numberOfPagesForMainPosts();
+
+		if(page < 1 || page > numberOfPages) {
+			throw new IndexOutOfBoundsException("No posts availables for page: "+page);
+		}
+		Sort sort = Sort.by(Sort.Order.desc("isPinned"),Sort.Order.desc("updatedAt"));
+		Pageable pageable = PageRequest.of(page-1, PAGE_SIZE, sort);
+
 		try {
-			return postRepo.findAllMainPosts();
+			return postRepo.findAllMainPosts(pageable);
 		}catch(NoSuchElementException nsee) {
 			throw new NoSuchElementException("No main post found: "+nsee);
 		}
 	}
 	
 	@Transactional
-	public Post processNewPost(PostDTO postDTO, MultipartFile image) throws IOException {
-		Post post = savePost(postDTO);
+	public Post processNewPost(PostCreationDTO PostCreationDTO, MultipartFile image) throws IOException {
+		Post post = savePost(PostCreationDTO);
 		String filename = saveImage(image);
 		post = updateImagePath(post, filename);
 		updateParentPost(post);
@@ -47,20 +66,20 @@ public class PostService {
 	}
 	
 	/*SAVE POST*/
-	public Post savePost(PostDTO postDTO) {
-		if(postDTO.getIdposter() == null) {
-			throw new IllegalArgumentException("An error occurred while generating/getting the author ID cookie");
+	private Post savePost(PostCreationDTO PostCreationDTO) {
+		if(PostCreationDTO.getIdposter() == null) {
+			PostCreationDTO.setIdposter("0");
 		}
-		if(postDTO.getContent().isBlank() || postDTO.getContent() == null || postDTO.getContent().length()>8000) {
+		if(PostCreationDTO.getContent().isBlank() || PostCreationDTO.getContent() == null || PostCreationDTO.getContent().length()>8000) {
 			throw new IllegalArgumentException("Posts must be at least 1 characters long and 8000 max");
 		}
-		if(postDTO.getParentId() == null) {
-			throw new IllegalArgumentException("An error has occurred while getting post's parentID");
+		if(PostCreationDTO.getParentId() == null) {
+			throw new NullPointerException("An error has occurred while getting post's parentID");
 		}
-		System.out.println("postDTO Nickname: "+postDTO.getNickname());
-		Post newPost = new Post.Builder(postDTO)
-				.nickname(postDTO.getNickname())
-				.title(postDTO.getTitle())
+		System.out.println("PostCreationDTO Nickname: "+PostCreationDTO.getNickname());
+		Post newPost = new Post.Builder(PostCreationDTO)
+				.nickname(PostCreationDTO.getNickname())
+				.title(PostCreationDTO.getTitle())
 				.build();
 		System.out.println("newPost Nickname: "+newPost.getNickname());
 
@@ -73,7 +92,7 @@ public class PostService {
 	}
 	
 	/*SAVE IMAGE*/
-	public String saveImage(MultipartFile image) throws IOException {
+	private String saveImage(MultipartFile image) throws IOException {
 		if(image.isEmpty() || image == null) {
 			return null;
 			//throw new IOException("Can not update the file.");
@@ -89,7 +108,7 @@ public class PostService {
 	}
 	
 	/*UPDATE IMAGE PATH*/
-	public Post updateImagePath(Post post, String imagePath) {
+	private Post updateImagePath(Post post, String imagePath) {
 		post.setImagePath(imagePath);
 		try {
 			return postRepo.save(post);
@@ -99,11 +118,15 @@ public class PostService {
 	}
 	
 	/*UPDATE PARENT POST*/
-	public boolean updateParentPost(Post post) {
+	private boolean updateParentPost(Post post) {
 		//if the post has a parent (is a reply) then update parent post date and reply count
 		if (post.getParentId() != 0){
 			Post parentPost = postRepo.findById(post.getParentId()).orElseThrow(()-> new NoSuchElementException("Parent post not found for updating last update date"));
-			parentPost.setUpdateLastUpdate();
+			
+			if(parentPost.getResponseCount() < MAX_RESPONSES) {
+				parentPost.setUpdateLastUpdate();
+			}
+			
 			parentPost.setResponseCount(parentPost.getResponseCount()+1);
 			
 			try {
@@ -114,5 +137,16 @@ public class PostService {
 			}
 		}
 		else return false;
+	}
+	
+	public int numberOfPagesForMainPosts() {
+		int numberOfItems = postRepo.findAllMainPosts().size();
+		int numberOfPages =  (numberOfItems+PAGE_SIZE-1)/PAGE_SIZE;
+
+		if (numberOfPages>MAX_NUMBER_PAGES) {
+			numberOfPages = MAX_NUMBER_PAGES;
+		}
+		
+		return numberOfPages;
 	}
 }
