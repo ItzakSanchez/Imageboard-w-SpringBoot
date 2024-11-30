@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xlmns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error page 1</title>
+</head>
+<body>
+    <h1>Something went wrong</h1>
+    <div th:if="${errorMessage != null}">
+		<p th:text="${errorMessage}"></p>
+	</div>
+</body>
+</html>

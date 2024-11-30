@@ -48,7 +48,7 @@ public class PostController {
 		String idPoster = getCookie(request, response);
 		postDto.setIdposter(idPoster);
 		postSvc.processNewPost(postDto, image);
-		return "postedSuccessfully";
+		return "redirect:/postedSuccessfully";
 	}
 	
 	 @GetMapping("/imageController")

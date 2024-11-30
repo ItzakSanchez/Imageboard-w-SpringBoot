@@ -68,7 +68,7 @@ public class PostService {
 			Post savedPost = postRepo.save(newPost);
 			return(savedPost);
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityViolationException("An error occurred while saving the publication to the database: " + e.getMessage());
+			throw new DataIntegrityViolationException("An error occurred while saving the publication to the database");
 		}
 	}
 	
