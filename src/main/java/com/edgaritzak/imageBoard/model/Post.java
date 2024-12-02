@@ -132,7 +132,7 @@ public class Post {
 	public Long getParentId() {
 		return parentId;
 	}
-	public boolean isPinned() {
+	public boolean getIsPinned() {
 		return isPinned;
 	}
 	public LocalDateTime getUpdatedAt() {

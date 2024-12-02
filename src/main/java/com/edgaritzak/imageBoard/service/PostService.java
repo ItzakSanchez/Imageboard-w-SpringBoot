@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.edgaritzak.imageBoard.dto.PostCreationDTO;
+import com.edgaritzak.imageBoard.dto.PostResponseDTO;
 import com.edgaritzak.imageBoard.model.Post;
 import com.edgaritzak.imageBoard.repository.PostRepo;
 
@@ -30,6 +33,8 @@ public class PostService {
 	private final int MAX_NUMBER_PAGES = 9;
 	private final int MAX_RESPONSES = 10;
 	private final int PAGE_SIZE = 2;
+	private final int NUMBER_RESPONSES_PREVIEW = 3;
+	
 	
 	@Autowired
 	public PostService(PostRepo postRepo) {
@@ -39,22 +44,54 @@ public class PostService {
 	* FETCH LAST 3 RESPONSES FOR EACH THREAD"
 	* CREATE DTO OR USE A LIST OF LISTS 
 	**/
-	public List<Post> findAllMainPosts(int page){
+	public List<PostResponseDTO> findAllMainPosts(int page){
 		
 		int numberOfPages = numberOfPagesForMainPosts();
 
 		if(page < 1 || page > numberOfPages) {
 			throw new IndexOutOfBoundsException("No posts availables for page: "+page);
 		}
+		List<Post> posts= new ArrayList<>();
 		Sort sort = Sort.by(Sort.Order.desc("isPinned"),Sort.Order.desc("updatedAt"));
 		Pageable pageable = PageRequest.of(page-1, PAGE_SIZE, sort);
-
+		
 		try {
-			return postRepo.findAllMainPosts(pageable);
+			posts = postRepo.findAllMainPosts(pageable);
 		}catch(NoSuchElementException nsee) {
 			throw new NoSuchElementException("No main post found: "+nsee);
 		}
+		//TRANSFORM POSTS TO DTO
+		List<PostResponseDTO> DTOList = PostToPostResponseDTO(posts);
+		
+		//CREATE PAGEABLES FOR RESPONES QUERY
+		Sort sortForResponses = Sort.by(Sort.Order.desc("creationDateTime"));
+		Pageable pageableForResponses = PageRequest.of(0, NUMBER_RESPONSES_PREVIEW, sortForResponses);
+		//FILL FOR EACH MAIN POST IT RESPONSES
+		for(PostResponseDTO mainPost:DTOList) {
+			List<PostResponseDTO> responses = new ArrayList<>();
+			responses = PostToPostResponseDTO(postRepo.findAllResponsesByMainId(mainPost.getId(), pageableForResponses));
+			mainPost.setResponses(responses);
+		}
+		return DTOList;
 	}
+	
+	private List<PostResponseDTO> PostToPostResponseDTO (List<Post> Posts){
+		return Posts.stream()
+				.map((post)-> new PostResponseDTO(
+						post.getId(),
+						post.getIdposter(),
+						post.getNickname(),
+						post.getTitle(),
+						post.getContent(),
+						post.getImagePath(),
+						post.getCreationDateTime(),
+						post.getParentId(),
+						post.getIsPinned(),
+						post.getResponseCount(),
+						new ArrayList<PostResponseDTO>()))
+						.collect(Collectors.toList());
+	}
+	
 	
 	@Transactional
 	public Post processNewPost(PostCreationDTO PostCreationDTO, MultipartFile image) throws IOException {
