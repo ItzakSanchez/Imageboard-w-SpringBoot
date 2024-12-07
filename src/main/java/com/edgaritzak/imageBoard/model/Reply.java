@@ -14,8 +14,8 @@ public class Reply extends Post {
 	private Long threadId;
 
 	public Reply() {}
-	public Reply(String authorId, String content, String nickname, Long threadId) {
-		super(authorId, content, nickname);
+	public Reply(String authorId, String content, String nickname, Board board, Long threadId) {
+		super(authorId, content, nickname, board);
 		this.threadId = threadId;
 	}
 
