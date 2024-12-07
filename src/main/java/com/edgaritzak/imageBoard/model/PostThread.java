@@ -9,8 +9,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "thread")
-@PrimaryKeyJoinColumn(name = "post_id")
-public class Thread extends Post1{
+@PrimaryKeyJoinColumn(name = "id")
+public class PostThread extends Post{
 
 	@Column(name="title")
 	private String title;
@@ -24,9 +24,9 @@ public class Thread extends Post1{
 	@Column(name = "is_pinned")
 	private boolean isPinned;
 
-	public Thread() {}
-	public Thread(String authorId, String content, String nickname, String title) {
-		super(authorId, content, nickname);
+	public PostThread() {}
+	public PostThread(String authorId, String content, String nickname, Board board, String title) {
+		super(authorId, content, nickname, board);
 		this.title = title;
 		this.updatedAt = LocalDateTime.now();
 		this.lastBumpAt = LocalDateTime.now();

@@ -7,8 +7,8 @@ import jakarta.persistence.Table;
 
 @Entity()
 @Table(name = "reply")
-@PrimaryKeyJoinColumn(name = "post_id")
-public class Reply extends Post1 {
+@PrimaryKeyJoinColumn(name = "id")
+public class Reply extends Post {
 	
 	@Column(name = "thread_id")
 	private Long threadId;

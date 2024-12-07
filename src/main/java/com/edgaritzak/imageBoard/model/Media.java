@@ -6,27 +6,28 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name = "post_media")
-public class PostMedia {
+@Table(name = "media")
+public class Media {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@ManyToOne
-	@JoinColumn(name = "post_id")
-	private Post1 post;
-	
+
 	@Column(name = "filename")
 	private String filename;
 
-	public PostMedia() {}
-	public PostMedia(Post1 post, String filename) {
+	@ManyToOne
+	@JoinColumn(name = "post_id")
+	private Post post;
+
+	public Media() {}
+	public Media(Post post, String filename) {
 		this.post = post;
 		this.filename = filename;
 	}

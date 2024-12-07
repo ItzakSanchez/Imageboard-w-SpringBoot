@@ -1,174 +1,99 @@
 package com.edgaritzak.imageBoard.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import com.edgaritzak.imageBoard.dto.PostCreationDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
-@Table(name="tbl_post")
-public class Post {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Post {
 	
-	@Id 
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
 	private Long id;
-	@Column(name="id_poster")
-	private String idposter;
-	@Column(name="nickname")
-	private String nickname;
-	@Column(name="title")
-	private String title;
-	@Column(name="content")
+
+	@Column(name ="author_id")
+	private String authorId;
+
+	@Column(name ="content")
 	private String content;
-	@Column(name="image_path")
-	private String imagePath;
-	@Column(name = "creation_date_time")
-	private LocalDateTime creationDateTime;
-	@Column(name = "parent_post_id")
-	private Long parentId;
-	@Column(name = "is_pinned")
-	private boolean isPinned;
-	@Column(name = "updated_at")
-	private LocalDateTime updatedAt;
-	@Column(name = "response_count")
-	private int responseCount;
-	/*POST CONSTRUCTOR*/
+
+	@Column(name ="nickname")
+	private String nickname;
+
+	@Column(name ="created_at")
+	private LocalDateTime createdAt;
+	
+	@ManyToOne
+	@JoinColumn(name = "board_id")
+	private Board board;
+	
+	@OneToMany(mappedBy = "post")
+	private Set<Media> media;
+
 	public Post() {}
-	
-	private Post(Builder builder) {
-		super();
-		this.idposter = builder.idposter;
-		this.nickname = builder.nickname;
-		this.title = builder.title;
-		this.content = builder.content;
-		this.imagePath = builder.imagePath;
-		this.creationDateTime = builder.creationDateTime;
-		this.parentId = builder.parentId;
-		this.isPinned = builder.isPinned;
-		this.updatedAt = builder.updatedAt;
-		this.responseCount = builder.responseCount;
+	public Post(String authorId, String content, String nickname, Board board) {
+		this.authorId = authorId;
+		this.content = content;
+		this.nickname = nickname.isBlank() ? "Anonymous" : nickname;
+		this.createdAt = LocalDateTime.now();
+		this.board = board;
+		this.media = new HashSet<Media>();
 	}
 	
-	/*BUILDER*/
-	public static class Builder{
-		
-		private String idposter;
-		private String nickname;
-		private String title;
-		private String content;
-		private String imagePath;
-		private LocalDateTime creationDateTime;
-		private Long parentId;
-		private boolean isPinned; 
-		private LocalDateTime updatedAt;
-		private int responseCount;
-		
-		/*BUILDER CONSTRUCTOR*/
-		public Builder(PostCreationDTO postCreationDTO) {
-			this.idposter = postCreationDTO.getIdposter();
-			this.content = postCreationDTO.getContent();
-			this.parentId = postCreationDTO.getParentId();
-			this.creationDateTime = LocalDateTime.now();
-			this.updatedAt = LocalDateTime.now();
-			this.nickname = "Anonymous";
-			this.responseCount = 0;
-			
-		}
-		
-		public Builder nickname(String nickname) {
-			if(!nickname.isBlank()) {
-				this.nickname = nickname;
-			}
-			return this;
-		}
-		public Builder title(String title) {
-			if (!title.isBlank()) {
-				this.title = title;
-			}
-			return this;
-		}
-		public Builder imagePath(String imagePath) {
-			this.imagePath = imagePath;
-			return this;
-		}
-		public Builder isPinned(boolean isPinned) {
-			this.isPinned = isPinned;
-			return this;
-		}
-		
-		public Post build() {
-			return new Post(this);
-		}
-	}
-	
-	/*GETTERS*/
 	public Long getId() {
 		return id;
 	}
-	public String getIdposter() {
-		return idposter;
+	public void setId(Long id) {
+		this.id = id;
 	}
-	public String getNickname() {
-		return nickname;
+	public String getAuthorId() {
+		return authorId;
 	}
-	public String getTitle() {
-		return title;
+	public void setAuthorId(String authorId) {
+		this.authorId = authorId;
 	}
 	public String getContent() {
 		return content;
 	}
-	public String getImagePath() {
-		return imagePath;
+	public void setContent(String content) {
+		this.content = content;
 	}
-	public LocalDateTime getCreationDateTime() {
-		return creationDateTime;
+	public String getNickname() {
+		return nickname;
 	}
-	public Long getParentId() {
-		return parentId;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
-	public boolean getIsPinned() {
-		return isPinned;
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
-	public LocalDateTime getUpdatedAt() {
-		return creationDateTime;
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
-	public int getResponseCount() {
-		return responseCount;
+	public Set<Media> getMedia() {
+		return media;
 	}
-
-
-
-	/*SETTERS*/
-	public void setIsPinned(boolean isPinned) {
-		this.isPinned = isPinned;
+	public void setMedia(Set<Media> media) {
+		this.media = media;
 	}
-	public void setUpdateLastUpdate() {
-		this.updatedAt = LocalDateTime.now();
+	public Board getBoard() {
+		return board;
 	}
-	public void setImagePath(String imagePath) {
-		this.imagePath = imagePath;
+	public void setBoard(Board board) {
+		this.board = board;
 	}
-	public void setResponseCount(int responseCount) {
-		this.responseCount = responseCount;
-	}
-
-	@Override
-	public String toString() {
-		return "Post [id=" + id + ", idposter=" + idposter + ", nickname=" + nickname + ", title=" + title
-				+ ", content=" + content + ", imagePath=" + imagePath + ", creationDateTime=" + creationDateTime
-				+ ", parentId=" + parentId + ", isPinned=" + isPinned + ", updatedAt=" + updatedAt + ", responseCount="
-				+ responseCount + "]";
-	}
-
-
-	
-	
 }
-
-

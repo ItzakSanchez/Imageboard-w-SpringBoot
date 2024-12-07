@@ -37,50 +37,50 @@ public class PostController {
 	@Autowired
 	private PostService postSvc;
 	
-	@GetMapping("/posts")
-	public String posts(Model model) {
-		model.addAttribute("posts",postSvc.findAllMainPosts(1));
-		
-		model.addAttribute("numberOfPages",postSvc.numberOfPagesForMainPosts());
-
-		model.addAttribute("nextPage",2);
-		model.addAttribute("previousPage","#");
-		return "posts";
-	}
-	
-	@GetMapping("/posts/{page}")
-	public String postsPage(@PathVariable("page")int page ,Model model) {
-		if(page == 1) {return "redirect:/posts";}
-		try {
-		model.addAttribute("posts",postSvc.findAllMainPosts(page));
-		} catch(Exception ex) {
-			model.addAttribute("errorMessage", ex.getMessage());
-			return "error/404";
-		}
-		model.addAttribute("numberOfPages",postSvc.numberOfPagesForMainPosts());
-		
-		if(postSvc.numberOfPagesForMainPosts() == page) {
-			model.addAttribute("nextPage","#");
-		} else {
-			model.addAttribute("nextPage",page+1);
-		}
-		model.addAttribute("previousPage",page-1);
-		return "posts";
-	}
-	
-	@GetMapping("/")
-	public String homePage() {
-		return "home";
-	}
-	
-	@PostMapping("/upload")
-	public String newPost(@ModelAttribute PostCreationDTO postCreationDto, @RequestParam(value="image") MultipartFile image, HttpServletRequest request, HttpServletResponse response) throws IOException{
-		String idPoster = getCookie(request, response);
-		postCreationDto.setIdposter(idPoster);
-		postSvc.processNewPost(postCreationDto, image);
-		return "postedSuccessfully";
-	}
-	
+//	@GetMapping("/posts")
+//	public String posts(Model model) {
+//		model.addAttribute("posts",postSvc.findAllMainPosts(1));
+//		
+//		model.addAttribute("numberOfPages",postSvc.numberOfPagesForMainPosts());
+//
+//		model.addAttribute("nextPage",2);
+//		model.addAttribute("previousPage","#");
+//		return "posts";
+//	}
+//	
+//	@GetMapping("/posts/{page}")
+//	public String postsPage(@PathVariable("page")int page ,Model model) {
+//		if(page == 1) {return "redirect:/posts";}
+//		try {
+//		model.addAttribute("posts",postSvc.findAllMainPosts(page));
+//		} catch(Exception ex) {
+//			model.addAttribute("errorMessage", ex.getMessage());
+//			return "error/404";
+//		}
+//		model.addAttribute("numberOfPages",postSvc.numberOfPagesForMainPosts());
+//		
+//		if(postSvc.numberOfPagesForMainPosts() == page) {
+//			model.addAttribute("nextPage","#");
+//		} else {
+//			model.addAttribute("nextPage",page+1);
+//		}
+//		model.addAttribute("previousPage",page-1);
+//		return "posts";
+//	}
+//	
+//	@GetMapping("/")
+//	public String homePage() {
+//		return "home";
+//	}
+//	
+//	@PostMapping("/upload")
+//	public String newPost(@ModelAttribute PostCreationDTO postCreationDto, @RequestParam(value="image") MultipartFile image, HttpServletRequest request, HttpServletResponse response) throws IOException{
+//		String idPoster = getCookie(request, response);
+//		postCreationDto.setIdposter(idPoster);
+//		postSvc.processNewPost(postCreationDto, image);
+//		return "postedSuccessfully";
+//	}
+//	
 	 @GetMapping("/imageController")
 	 public String imageController() {
 		 return "imageController";
