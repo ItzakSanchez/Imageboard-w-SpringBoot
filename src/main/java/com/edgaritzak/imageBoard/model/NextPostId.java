@@ -1,5 +1,7 @@
 package com.edgaritzak.imageBoard.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,13 +19,16 @@ public class NextPostId {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne
+	
+	@JsonIgnore
+	@OneToOne
 	@JoinColumn(name = "board_id")
 	private Board board;
 	
 	@Column(name = "next_id")
 	private Long nextId;
 
+	public NextPostId() {};
 	public NextPostId(Board board, Long nextId) {
 		super();
 		this.board = board;

@@ -7,14 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.edgaritzak.imageBoard.model.Board;
+import com.edgaritzak.imageBoard.model.NextPostId;
 import com.edgaritzak.imageBoard.repository.BoardRepository;
+import com.edgaritzak.imageBoard.repository.NextPostIdRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class BoardService {
 
 	@Autowired
 	private BoardRepository boardRepo;
-	
+	@Autowired
+	private  NextPostIdRepository nextPostIdRepo;
+
 	public Optional<Board> findBoardById(Long id) {
 		return boardRepo.findById(id);
 	}
@@ -23,8 +29,12 @@ public class BoardService {
 		return boardRepo.findAll();
 	}
 	
-	public Board saveBoard(Board board) {
+	@Transactional
+	public Board saveBoardAndCreateNextPostId(Board board) {
 		board.setId(0L);
-		return boardRepo.save(board);
+		Board newBoard = boardRepo.save(board);
+		NextPostId nextPostId = new NextPostId(newBoard,1L);
+		nextPostId = nextPostIdRepo.save(nextPostId);
+		return newBoard;
 	}
 }

@@ -35,7 +35,7 @@ public class BoardController {
 	
 	@RequestMapping(path = "/board", method = RequestMethod.POST)
 	public Board saveBoard(@RequestBody Board board){
-		return boardService.saveBoard(board);
+		return boardService.saveBoardAndCreateNextPostId(board);
 	}
 	
 

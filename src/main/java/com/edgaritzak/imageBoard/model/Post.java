@@ -1,11 +1,10 @@
 package com.edgaritzak.imageBoard.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,17 +40,21 @@ public abstract class Post {
 	@JoinColumn(name = "board_id")
 	private Board board;
 	
-	@OneToMany(mappedBy = "post")
+	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
 	private Set<Media> media;
+	
+	@Column(name ="real_board_id")
+	private Long realId;
 
 	public Post() {}
 	public Post(String authorId, String content, String nickname, Board board) {
-		this.authorId = authorId;
+		this.authorId = authorId.isBlank() ? "0" : authorId;
 		this.content = content;
 		this.nickname = nickname.isBlank() ? "Anonymous" : nickname;
 		this.createdAt = LocalDateTime.now();
 		this.board = board;
 		this.media = new HashSet<Media>();
+		this.realId = 1L;//CREAR EL SERVICIO DE NEXTPOSTIDSERVICE CON LA FUNCION .GETNEXTID(LONG BOARDID);
 	}
 	
 	public Long getId() {
@@ -96,4 +99,11 @@ public abstract class Post {
 	public void setBoard(Board board) {
 		this.board = board;
 	}
+	public Long getRealId() {
+		return realId;
+	}
+	public void setRealId(Long realId) {
+		this.realId = realId;
+	}
+	
 }
