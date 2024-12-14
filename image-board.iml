@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
   <component name="AdditionalModuleElements">
@@ -17,4 +18,25 @@
       <src_folder value="file://$MODULE_DIR$/target/generated-test-sources/test-annotations" expected_position="7" />
     </src_description>
   </component>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$" dumb="true">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="false" />
+    </content>
+  </component>
+  <component name="EclipseModuleManager">
+    <conelement value="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER" />
+    <src_description expected_position="2">
+      <src_folder value="file://$MODULE_DIR$/src/main/java" expected_position="0" />
+      <src_folder value="file://$MODULE_DIR$/src/main/resources" expected_position="1" />
+      <src_folder value="file://$MODULE_DIR$/src/test/java" expected_position="2" />
+      <src_folder value="file://$MODULE_DIR$/src/test/resources" expected_position="3" />
+      <src_folder value="file://$MODULE_DIR$/target/generated-sources/annotations" expected_position="6" />
+      <src_folder value="file://$MODULE_DIR$/target/generated-test-sources/test-annotations" expected_position="7" />
+    </src_description>
+  </component>
+>>>>>>> 7a9c4e126cdc1ac05c7c7c9741595f4b40c47553
 </module>
