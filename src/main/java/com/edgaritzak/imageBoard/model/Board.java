@@ -29,7 +29,7 @@ public class Board {
 	private Set<Post> posts;
 	
 	@OneToOne(mappedBy = "board", cascade = CascadeType.PERSIST)
-	private NextPostId nextPostId;
+	private BoardIdCounter boardIdCounter;
 	
 	public Board() {}
 	public Board(String name, String codeName) {
@@ -62,10 +62,10 @@ public class Board {
 	public void setPosts(Set<Post> posts) {
 		this.posts = posts;
 	}
-	public NextPostId getNextPostId() {
-		return nextPostId;
+	public BoardIdCounter getNextPostId() {
+		return boardIdCounter;
 	}
-	public void setNextPostId(NextPostId nextPostId) {
-		this.nextPostId = nextPostId;
+	public void setNextPostId(BoardIdCounter boardIdCounter) {
+		this.boardIdCounter = boardIdCounter;
 	}
 }

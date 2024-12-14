@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +20,7 @@ import jakarta.persistence.OneToMany;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Post {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -35,7 +36,8 @@ public abstract class Post {
 
 	@Column(name ="created_at")
 	private LocalDateTime createdAt;
-	
+
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "board_id")
 	private Board board;
@@ -43,18 +45,18 @@ public abstract class Post {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
 	private Set<Media> media;
 	
-	@Column(name ="real_board_id")
-	private Long realId;
+	@Column(name ="post_number")
+	private Long postNumber;
 
 	public Post() {}
-	public Post(String authorId, String content, String nickname, Board board) {
+	public Post(Long postNumber, String authorId, String content, String nickname, Board board) {
+		this.postNumber = postNumber;
 		this.authorId = authorId.isBlank() ? "0" : authorId;
 		this.content = content;
 		this.nickname = nickname.isBlank() ? "Anonymous" : nickname;
 		this.createdAt = LocalDateTime.now();
 		this.board = board;
 		this.media = new HashSet<Media>();
-		this.realId = 1L;//CREAR EL SERVICIO DE NEXTPOSTIDSERVICE CON LA FUNCION .GETNEXTID(LONG BOARDID);
 	}
 	
 	public Long getId() {
@@ -99,11 +101,11 @@ public abstract class Post {
 	public void setBoard(Board board) {
 		this.board = board;
 	}
-	public Long getRealId() {
-		return realId;
+	public Long getPostNumber() {
+		return postNumber;
 	}
-	public void setRealId(Long realId) {
-		this.realId = realId;
+	public void setPostNumber(Long postNumber) {
+		this.postNumber = postNumber;
 	}
 	
 }

@@ -7,17 +7,19 @@
 </head>
 <body>
     <h1>Home page</h1>
-    <form action="#" th:action="@{/upload}" method="post" enctype="multipart/form-data">
+    <form action="#" th:action="@{/uploadThread}" method="post" enctype="multipart/form-data">
         <label for="title">Title</label>
         <input type="text" name="title" id="title"><br/>
         <label for="nickname">Nickname</label>
         <input type="text" name="nickname" id="nickname"><br/>
         <label for="content">Content</label>
         <input type="text" name="content" id="content"><br/>
-		<label for="content">Response to: (0 if new post)</label>
-        <input type="number" name="parentId" id="parentId"><br/>
-        <label for="image">Upload image</label>
-        <input type="file" name="image" id="image"><br/>
+
+        <label for="boardId">boardId</label>
+        <input type="text" value="4" name="boardId" id="boardId">
+
+        <label for="images">Upload image</label>
+        <input type="file" name="images" id="images" multiple><br/>
         <button type="submit">Upload</button>
     </form>
 </body>

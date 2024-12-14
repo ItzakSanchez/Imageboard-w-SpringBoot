@@ -8,13 +8,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="next_post_id_by_board")
-public class NextPostId {
+@Table(name="board_id_counter")
+public class BoardIdCounter {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +27,8 @@ public class NextPostId {
 	@Column(name = "next_id")
 	private Long nextId;
 
-	public NextPostId() {};
-	public NextPostId(Board board, Long nextId) {
+	public BoardIdCounter() {};
+	public BoardIdCounter(Board board, Long nextId) {
 		super();
 		this.board = board;
 		this.nextId = nextId;
@@ -54,4 +53,5 @@ public class NextPostId {
 	public void setNextId(Long nextId) {
 		this.nextId = nextId;
 	}
+
 }

@@ -1,7 +1,11 @@
 package com.edgaritzak.imageBoard.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
+import com.edgaritzak.imageBoard.dto.RequestThreadDTO;
+import com.edgaritzak.imageBoard.service.BoardIdCounterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +21,8 @@ import com.edgaritzak.imageBoard.service.ThreadService;
 @RestController
 public class BoardController {
 
+	@Autowired
+	private BoardIdCounterService boardIdCounterService;
 	@Autowired
 	private BoardService boardService;
 	@Autowired
@@ -35,7 +41,7 @@ public class BoardController {
 	
 	@RequestMapping(path = "/board", method = RequestMethod.POST)
 	public Board saveBoard(@RequestBody Board board){
-		return boardService.saveBoardAndCreateNextPostId(board);
+		return boardService.saveBoardAndCreateBoardIdCounter(board);
 	}
 	
 
@@ -53,7 +59,7 @@ public class BoardController {
 	}
 	
 	@RequestMapping(path = "/thread", method = RequestMethod.POST)
-	public PostThread saveThread(@RequestBody PostThread thread){
-		return threadService.saveThread(thread);
+	public PostThread saveThread(@RequestBody RequestThreadDTO requestThreadDTO){
+		return threadService.saveThread(requestThreadDTO);
 	}
 }
