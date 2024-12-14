@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+
+import com.edgaritzak.imageBoard.dto.RequestThreadDTO;
+import com.edgaritzak.imageBoard.service.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -13,14 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.edgaritzak.imageBoard.dto.PostCreationDTO;
@@ -36,6 +33,9 @@ public class PostController {
 	
 	@Autowired
 	private PostService postSvc;
+
+	@Autowired
+	private ThreadService threadService;
 	
 //	@GetMapping("/posts")
 //	public String posts(Model model) {
@@ -68,10 +68,18 @@ public class PostController {
 //		return "posts";
 //	}
 //	
-//	@GetMapping("/")
-//	public String homePage() {
-//		return "home";
-//	}
+	@GetMapping("/")
+	public String homePage() {
+		return "home";
+	}
+
+
+	@PostMapping("/uploadThread")
+	public String showMultiPartFile(@ModelAttribute RequestThreadDTO requestThreadDTO, @RequestParam("images") List<MultipartFile> images, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		requestThreadDTO.setAuthorId(getCookie(request, response));
+		threadService.processNewThread(requestThreadDTO, images);
+		return "home";
+	}
 //	
 //	@PostMapping("/upload")
 //	public String newPost(@ModelAttribute PostCreationDTO postCreationDto, @RequestParam(value="image") MultipartFile image, HttpServletRequest request, HttpServletResponse response) throws IOException{

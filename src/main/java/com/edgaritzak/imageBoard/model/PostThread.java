@@ -1,11 +1,10 @@
 package com.edgaritzak.imageBoard.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "thread")
@@ -24,13 +23,17 @@ public class PostThread extends Post{
 	@Column(name = "is_pinned")
 	private boolean isPinned;
 
+	@OneToMany(mappedBy = "thread")
+	private List<Reply> replies;
+
 	public PostThread() {}
-	public PostThread(String authorId, String content, String nickname, Board board, String title) {
-		super(authorId, content, nickname, board);
+	public PostThread(Long postNumber, String authorId, String content, String nickname, Board board, String title) {
+		super(postNumber, authorId, content, nickname, board);
 		this.title = title;
 		this.updatedAt = LocalDateTime.now();
 		this.lastBumpAt = LocalDateTime.now();
 		this.isPinned = false;
+		this.replies = new ArrayList<>();
 	}
 
 	public String getTitle() {
@@ -57,4 +60,6 @@ public class PostThread extends Post{
 	public void setPinned(boolean isPinned) {
 		this.isPinned = isPinned;
 	}
+    public List<Reply> getReplies() {return replies;}
+    public void setReplies(List<Reply> replies) {this.replies = replies;}
 }

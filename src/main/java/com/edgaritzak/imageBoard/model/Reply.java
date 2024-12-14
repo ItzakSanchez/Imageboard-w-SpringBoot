@@ -1,30 +1,27 @@
 package com.edgaritzak.imageBoard.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity()
 @Table(name = "reply")
 @PrimaryKeyJoinColumn(name = "id")
 public class Reply extends Post {
 	
-	@Column(name = "thread_id")
-	private Long threadId;
+	@JoinColumn(name = "thread_id")
+	@ManyToOne(cascade = CascadeType.REMOVE)
+	private PostThread thread;
 
 	public Reply() {}
-	public Reply(String authorId, String content, String nickname, Board board, Long threadId) {
-		super(authorId, content, nickname, board);
-		this.threadId = threadId;
+	public Reply(Long postNumber, String authorId, String content, String nickname, Board board, PostThread thread) {
+		super(postNumber, authorId, content, nickname, board);
+		this.thread = thread;
 	}
-
 	
-	public Long getThreadId() {
-		return threadId;
+	public PostThread getThread() {
+		return thread;
 	}
-	public void setThreadId(Long threadId) {
-		this.threadId = threadId;
+	public void setThread(PostThread thread) {
+		this.thread = thread;
 	}
 	
 }
