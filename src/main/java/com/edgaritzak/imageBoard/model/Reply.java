@@ -17,6 +17,8 @@ public class Reply extends Post {
 		this.thread = thread;
 	}
 	
+	
+	
 	public PostThread getThread() {
 		return thread;
 	}

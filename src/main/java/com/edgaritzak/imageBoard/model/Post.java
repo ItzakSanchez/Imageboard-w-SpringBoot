@@ -40,7 +40,7 @@ public abstract class Post {
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "board_id")
-	private Board board;
+	private Board board;                  //DELETE BOARD ID AN PUT IN ON POSTTHREAD
 	
 	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
 	private Set<Media> media;

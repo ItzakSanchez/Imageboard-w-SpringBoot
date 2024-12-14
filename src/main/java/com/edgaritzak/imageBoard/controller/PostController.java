@@ -20,7 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.edgaritzak.imageBoard.dto.PostCreationDTO;
+import com.edgaritzak.imageBoard.dto.RequestReplyDTO;
 import com.edgaritzak.imageBoard.service.PostService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,8 +31,8 @@ public class PostController {
 	
 	int pageSize = 2;
 	
-	@Autowired
-	private PostService postSvc;
+//	@Autowired
+//	private PostService postSvc;
 
 	@Autowired
 	private ThreadService threadService;
@@ -68,37 +68,38 @@ public class PostController {
 //		return "posts";
 //	}
 //	
-	@GetMapping("/")
-	public String homePage() {
-		return "home";
+	@GetMapping("/postThread")
+	public String postThread() {
+		return "postThread";
 	}
-
+	
+	@GetMapping("/postReply")
+	public String postReply() {
+		return "postReply";
+	}
 
 	@PostMapping("/uploadThread")
-	public String showMultiPartFile(@ModelAttribute RequestThreadDTO requestThreadDTO, @RequestParam("images") List<MultipartFile> images, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String uploadThread(@ModelAttribute RequestThreadDTO requestThreadDTO, @RequestParam("images") List<MultipartFile> images, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		requestThreadDTO.setAuthorId(getCookie(request, response));
 		threadService.processNewThread(requestThreadDTO, images);
-		return "home";
+		return "postedSuccessfully";
 	}
-//	
-//	@PostMapping("/upload")
-//	public String newPost(@ModelAttribute PostCreationDTO postCreationDto, @RequestParam(value="image") MultipartFile image, HttpServletRequest request, HttpServletResponse response) throws IOException{
-//		String idPoster = getCookie(request, response);
-//		postCreationDto.setIdposter(idPoster);
-//		postSvc.processNewPost(postCreationDto, image);
-//		return "postedSuccessfully";
-//	}
-//	
+
+
+	@PostMapping("/uploadReply")
+	public String uploadReply(@ModelAttribute RequestReplyDTO requestReplyDTO, @RequestParam("images") List<MultipartFile> images, HttpServletRequest request, HttpServletResponse response) throws IOException{
+		requestReplyDTO.setAuthorId(getCookie(request,response));
+		threadService.processNewReply(requestReplyDTO, images);
+		return "postedSuccessfully";
+	}
+	
+	
 	 @GetMapping("/imageController")
 	 public String imageController() {
 		 return "imageController";
 	 }
 	 
-	 @GetMapping("/cookie")
-	 public String cookie(Model model, HttpServletRequest request, HttpServletResponse response) {
-		 model.addAttribute("cookie",getCookie(request, response));
-		 return "cookie";
-	 }
+
     
     @RequestMapping(path ={"/image/{filename}","posts/image/{filename}"}, method = RequestMethod.GET)
     @ResponseBody
@@ -115,6 +116,13 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+    
+    
+	 @GetMapping("/cookie")
+	 public String cookie(Model model, HttpServletRequest request, HttpServletResponse response) {
+		 model.addAttribute("cookie",getCookie(request, response));
+		 return "cookie";
+	 }
 	
 	public String getCookie(HttpServletRequest request, HttpServletResponse response) {
 		String idPoster;

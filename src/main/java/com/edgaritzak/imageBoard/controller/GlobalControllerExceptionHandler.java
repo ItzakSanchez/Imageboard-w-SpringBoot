@@ -6,17 +6,20 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.edgaritzak.imageBoard.Exceptions.NoImagesUploadedException;
+
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
 	
 	//Bad Request
-	@ExceptionHandler({IllegalArgumentException.class, HttpRequestMethodNotSupportedException.class})
+	@ExceptionHandler({IllegalArgumentException.class, HttpRequestMethodNotSupportedException.class , NoImagesUploadedException.class})
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public String illegalArgumentExceptionHandler(Model model, Exception ex) {
 		//response.setStatus(HttpStatus.BAD_REQUEST.value()); -> HttpServletResponse response
 		model.addAttribute("errorMessage", ex.getMessage());
 		return "error/errorPage";
 	}
+	
 	
 	//Generic Error
 	@ExceptionHandler(Exception.class)

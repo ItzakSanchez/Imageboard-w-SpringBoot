@@ -18,8 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.edgaritzak.imageBoard.dto.PostCreationDTO;
-import com.edgaritzak.imageBoard.dto.PostResponseDTO;
 import com.edgaritzak.imageBoard.model.Post;
 import jakarta.transaction.Transactional;
 
