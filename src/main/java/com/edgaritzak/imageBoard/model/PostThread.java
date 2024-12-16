@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -25,15 +27,21 @@ public class PostThread extends Post{
 
 	@OneToMany(mappedBy = "thread")
 	private List<Reply> replies;
+	
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "board_id")
+	private Board board;
 
 	public PostThread() {}
 	public PostThread(Long postNumber, String authorId, String content, String nickname, Board board, String title) {
-		super(postNumber, authorId, content, nickname, board);
+		super(postNumber, authorId, content, nickname);
 		this.title = title;
 		this.updatedAt = LocalDateTime.now();
 		this.lastBumpAt = LocalDateTime.now();
 		this.isPinned = false;
 		this.replies = new ArrayList<>();
+		this.board = board;
 	}
 
 	public String getTitle() {
@@ -62,4 +70,11 @@ public class PostThread extends Post{
 	}
     public List<Reply> getReplies() {return replies;}
     public void setReplies(List<Reply> replies) {this.replies = replies;}
+    
+	public Board getBoard() {
+		return board;
+	}
+	public void setBoard(Board board) {
+		this.board = board;
+	}
 }

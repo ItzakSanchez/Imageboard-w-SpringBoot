@@ -36,11 +36,6 @@ public abstract class Post {
 
 	@Column(name ="created_at")
 	private LocalDateTime createdAt;
-
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "board_id")
-	private Board board;                  //DELETE BOARD ID AN PUT IN ON POSTTHREAD
 	
 	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
 	private Set<Media> media;
@@ -49,13 +44,12 @@ public abstract class Post {
 	private Long postNumber;
 
 	public Post() {}
-	public Post(Long postNumber, String authorId, String content, String nickname, Board board) {
+	public Post(Long postNumber, String authorId, String content, String nickname) {
 		this.postNumber = postNumber;
 		this.authorId = authorId.isBlank() ? "0" : authorId;
 		this.content = content;
 		this.nickname = nickname.isBlank() ? "Anonymous" : nickname;
 		this.createdAt = LocalDateTime.now();
-		this.board = board;
 		this.media = new HashSet<Media>();
 	}
 	
@@ -94,12 +88,6 @@ public abstract class Post {
 	}
 	public void setMedia(Set<Media> media) {
 		this.media = media;
-	}
-	public Board getBoard() {
-		return board;
-	}
-	public void setBoard(Board board) {
-		this.board = board;
 	}
 	public Long getPostNumber() {
 		return postNumber;

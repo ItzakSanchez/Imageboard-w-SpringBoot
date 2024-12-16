@@ -6,4 +6,7 @@ public class ResponseThreadDTO {
     private String nickname;
     private String title;
     private String content;
+    
+    //NUMBER OF REPLIES
+    //NUMBER OF MEDIA
 }

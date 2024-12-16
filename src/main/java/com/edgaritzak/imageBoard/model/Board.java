@@ -26,7 +26,7 @@ public class Board {
 	private String codeName;
 	
 	@OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST)
-	private Set<Post> posts;
+	private Set<PostThread> threads;
 	
 	@OneToOne(mappedBy = "board", cascade = CascadeType.PERSIST)
 	private BoardIdCounter boardIdCounter;
@@ -35,7 +35,7 @@ public class Board {
 	public Board(String name, String codeName) {
 		this.name = name;
 		this.codeName = codeName;
-		this.posts = new HashSet<Post>();
+		this.threads = new HashSet<PostThread>();
 	}
 
 	public Long getId() {
@@ -56,11 +56,11 @@ public class Board {
 	public void setCodeName(String codeName) {
 		this.codeName = codeName;
 	}
-	public Set<Post> getPosts() {
-		return posts;
+	public Set<PostThread> getThreads() {
+		return threads;
 	}
-	public void setPosts(Set<Post> posts) {
-		this.posts = posts;
+	public void setThreads(Set<PostThread> threads) {
+		this.threads = threads;
 	}
 	public BoardIdCounter getNextPostId() {
 		return boardIdCounter;

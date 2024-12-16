@@ -5,14 +5,12 @@ public class RequestReplyDTO {
     private String nickname;
     private String content;
     private Long threadId;
-    private Long boardId;
 
-    public RequestReplyDTO(String authorId, String nickname, String content, Long boardId, Long threadId) {
+    public RequestReplyDTO(Long threadId, String authorId, String nickname, String content) {
+    	this.threadId = threadId;
         this.authorId = authorId;
         this.nickname = nickname;
-        this.threadId = threadId;
         this.content = content;
-        this.boardId = boardId;
     }
 
     public String getAuthorId() {
@@ -38,11 +36,5 @@ public class RequestReplyDTO {
     }
     public void setThreadId(Long threadId) {
         this.threadId = threadId;
-    }
-    public Long getBoardId() {
-        return boardId;
-    }
-    public void setBoardId(Long boardId) {
-        this.boardId = boardId;
     }
 }

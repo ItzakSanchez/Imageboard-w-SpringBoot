@@ -29,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ThreadService {
+	
+	private int MAX_BUMP = 100;
 
 	@Autowired
 	private BoardIdCounterService boardIdCounterService;
@@ -86,22 +88,34 @@ public class ThreadService {
 		}
 
 		Optional<PostThread> thread = threadRepo.findById(requestReplyDTO.getThreadId());
-		Optional<Board> board = boardService.findBoardById(requestReplyDTO.getBoardId());
-		if (board.isEmpty()){
-			throw new NoSuchElementException("Board not found");
-		}
 		if(thread.isEmpty()) {
 			throw new NoSuchElementException("This thread does not exit");
 		}
+		Optional<Board> board = boardService.findBoardById(thread.get().getBoard().getId());
+		if (board.isEmpty()){
+			throw new NoSuchElementException("Board not found");
+		}
+		
 		Reply reply = new Reply(
 				boardIdCounterService.getNextIdAndUpdate(board.get()),
 				requestReplyDTO.getAuthorId(),
 				requestReplyDTO.getContent(),
 				requestReplyDTO.getNickname(),
-				board.get(),
 				thread.get());
 		try {
+
+			//UPDATE DATE OF THREAD
+			thread.get().setUpdatedAtNow();
+			//FIND NUMBER OF REPLIES
+			int numberOfReplies = threadRepo.countRepliesByThreadId(thread.get().getId());
+			//IF THE NUMBER OF REPLIES IS LESS THAN MAX BUMPS, UPDATE THE DATE OF LAST BUMP
+			if (numberOfReplies <= MAX_BUMP) {
+				thread.get().setLastBumpAtNow();
+			}
+			
+			//SAVER REPLY
 			return replyRepo.save(reply);
+			
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException("An error occurred while saving the reply: "+e);
 		}
@@ -121,8 +135,8 @@ public class ThreadService {
 		PostThread postThread = new PostThread(
 				boardIdCounterService.getNextIdAndUpdate(board.get()),
 				requestThreadDTO.getAuthorId(),
-				requestThreadDTO.getNickname(),
 				requestThreadDTO.getContent(),
+				requestThreadDTO.getNickname(),
 				board.get(),
 				requestThreadDTO.getTitle());
 		try {
@@ -131,6 +145,7 @@ public class ThreadService {
 			throw new DataIntegrityViolationException("An error occurred while saving the thread: "+e);
 		}
 	}
+	
 
 	/*SAVE MEDIA TO LOCAL FOLDER*/
 	private String saveImage(MultipartFile image) throws IOException {
@@ -153,7 +168,7 @@ public class ThreadService {
 		return String.valueOf(randomUuid);
 	}
 
-	/*SAVE MEDIA REFERENCE ON DATABASE*/
+	/*SAVE MEDIA FILENAME ON DATABASE*/
 	private void saveImagePath(Post post, String filename) {
 		Media media = new Media(post, filename);
 		try {
