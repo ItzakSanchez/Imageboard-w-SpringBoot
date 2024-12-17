@@ -1,5 +1,7 @@
 package com.edgaritzak.imageBoard.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity()
@@ -7,6 +9,7 @@ import jakarta.persistence.*;
 @PrimaryKeyJoinColumn(name = "id")
 public class Reply extends Post {
 	
+	@JsonIgnore
 	@JoinColumn(name = "thread_id")
 	@ManyToOne(cascade = CascadeType.REMOVE)
 	private PostThread thread;
