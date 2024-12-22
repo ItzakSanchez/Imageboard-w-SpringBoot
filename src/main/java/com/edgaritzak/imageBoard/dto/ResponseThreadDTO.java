@@ -1,36 +1,42 @@
 package com.edgaritzak.imageBoard.dto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ResponseThreadDTO {
 	
+	private Long id;
 	private Long postNumber;
-    private String authorId;
-    private String nickname;
-    private String title;
-    private String content;
+	private String authorId;
+	private String nickname;
+	private String title;
+	private String content;
 	private LocalDateTime uploadedAt;
-	private List<Long> mediaId;
+	private List<String> mediaFilenames;
 	private int numberOfReplies;
 	private int numberOfMedia;
 	
 	public ResponseThreadDTO() {}
-	public ResponseThreadDTO(Long postNumber, String authorId, String nickname, String title, String content,
-			LocalDateTime uploadedAt, int numberOfReplies, int numberOfMedia) {
+	public ResponseThreadDTO(Long id, Long postNumber, String authorId, String nickname, String title, String content,
+			LocalDateTime uploadedAt, List<String> mediaFilenames, int numberOfReplies, int numberOfMedia) {
+		this.id = id;
 		this.postNumber = postNumber;
 		this.authorId = authorId;
 		this.nickname = nickname;
 		this.title = title;
 		this.content = content;
 		this.uploadedAt = uploadedAt;
-		this.mediaId = new ArrayList<Long>();
+		this.mediaFilenames = mediaFilenames;
 		this.numberOfReplies = numberOfReplies;
 		this.numberOfMedia = numberOfMedia;
 	}
 	
-	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public Long getPostNumber() {
 		return postNumber;
 	}
@@ -67,11 +73,11 @@ public class ResponseThreadDTO {
 	public void setUploadedAt(LocalDateTime uploadedAt) {
 		this.uploadedAt = uploadedAt;
 	}
-	public List<Long> getMediaId() {
-		return mediaId;
+	public List<String> getMediaFilenames() {
+		return mediaFilenames;
 	}
-	public void setMediaId(List<Long> mediaId) {
-		this.mediaId = mediaId;
+	public void setMediaFilenames(List<String> mediaFilenames) {
+		this.mediaFilenames = mediaFilenames;
 	}
 	public int getNumberOfReplies() {
 		return numberOfReplies;

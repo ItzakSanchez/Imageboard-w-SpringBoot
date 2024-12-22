@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Board - Home</title>
+</head>
+<body>
+    <h1>Welcome to Digital-Board</h1>
+    <div>
+      <p>Boards</p>
+    </div>
+    <div th:each="board:${boardList}">
+		  <a th:href="@{/{codeName}(codeName=${board.codeName})}" th:text="${board.name}"></a>
+    </div>
+</body>
+</html>

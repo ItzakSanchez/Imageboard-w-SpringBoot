@@ -11,16 +11,16 @@ public class ResponseReplyDTO {
 	private String nickname;
 	private String content;
 	private LocalDateTime uploadedAt;
-	private List<Long> mediaId;
+	private List<String> mediaFilenames;
 	
 	public ResponseReplyDTO(){}
-	public ResponseReplyDTO(Long postNumber, String authorId, String nickname, String content, LocalDateTime uploadedAt) {
+	public ResponseReplyDTO(Long postNumber, String authorId, String nickname, String content, LocalDateTime uploadedAt, List<String> mediaFilenames) {
 		this.postNumber = postNumber;
 		this.authorId = authorId;
 		this.nickname = nickname;
 		this.content = content;
 		this.uploadedAt = uploadedAt;
-		this.mediaId = new ArrayList<Long>();
+		this.mediaFilenames = mediaFilenames;
 	}
 	
 	
@@ -54,10 +54,10 @@ public class ResponseReplyDTO {
 	public void setUploadedAt(LocalDateTime uploadedAt) {
 		this.uploadedAt = uploadedAt;
 	}
-	public List<Long> getMediaId() {
-		return mediaId;
+	public List<String> getMediaFilenames() {
+		return mediaFilenames;
 	}
-	public void setMediaId(List<Long> mediaId) {
-		this.mediaId = mediaId;
+	public void setMediaFilenames(List<String> mediaFilenames) {
+		this.mediaFilenames = mediaFilenames;
 	}
 }

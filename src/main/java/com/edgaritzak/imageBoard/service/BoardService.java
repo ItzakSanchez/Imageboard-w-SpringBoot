@@ -1,8 +1,10 @@
 package com.edgaritzak.imageBoard.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.hibernate.resource.beans.container.internal.NoSuchBeanException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,9 @@ public class BoardService {
 		return boardRepo.findAll();
 	}
 
+	public Board findBoardByBoardCodeName(String codeName) {
+		return boardRepo.findByCodeName(codeName).orElseThrow(()-> new NoSuchElementException("Board Not Found"));
+	}
 
 	//CREATE NEW BOARD
 	@Transactional

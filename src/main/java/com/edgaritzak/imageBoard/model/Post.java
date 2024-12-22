@@ -1,7 +1,9 @@
 package com.edgaritzak.imageBoard.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -38,7 +40,7 @@ public abstract class Post {
 	private LocalDateTime createdAt;
 	
 	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
-	private Set<Media> media;
+	private List<Media> media;
 	
 	@Column(name ="post_number")
 	private Long postNumber;
@@ -50,7 +52,7 @@ public abstract class Post {
 		this.content = content;
 		this.nickname = nickname.isBlank() ? "Anonymous" : nickname;
 		this.createdAt = LocalDateTime.now();
-		this.media = new HashSet<Media>();
+		this.media = new ArrayList<Media>();
 	}
 	
 	public Long getId() {
@@ -83,10 +85,10 @@ public abstract class Post {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-	public Set<Media> getMedia() {
+	public List<Media> getMedia() {
 		return media;
 	}
-	public void setMedia(Set<Media> media) {
+	public void setMedia(List<Media> media) {
 		this.media = media;
 	}
 	public Long getPostNumber() {

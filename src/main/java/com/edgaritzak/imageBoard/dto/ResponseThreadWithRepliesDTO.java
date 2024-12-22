@@ -8,10 +8,10 @@ public class ResponseThreadWithRepliesDTO {
     private List<ResponseReplyDTO> replies;
     
     
-    public ResponseThreadWithRepliesDTO() {}
-	public ResponseThreadWithRepliesDTO(ResponseThreadDTO threadDTO) {
+  public ResponseThreadWithRepliesDTO() {}
+	public ResponseThreadWithRepliesDTO(ResponseThreadDTO threadDTO, List<ResponseReplyDTO> replies) {
 		this.threadDTO = threadDTO;
-		this.replies = new ArrayList<ResponseReplyDTO>();
+		this.replies = replies;
 	}
 	
 	
