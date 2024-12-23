@@ -1,4 +1,6 @@
 package com.edgaritzak.imageBoard.controller;
+import java.util.NoSuchElementException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -11,6 +13,13 @@ import com.edgaritzak.imageBoard.Exceptions.NoImagesUploadedException;
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
 	
+	@ExceptionHandler(NoSuchElementException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public String noSuchElementAdvice(Model model, Exception ex){
+		model.addAttribute("errorMessage", ex.getMessage());
+		return "error/404";
+	}
+
 	//Bad Request
 	@ExceptionHandler({IllegalArgumentException.class, HttpRequestMethodNotSupportedException.class , NoImagesUploadedException.class})
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

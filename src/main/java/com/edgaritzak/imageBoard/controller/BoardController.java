@@ -20,6 +20,7 @@ import com.edgaritzak.imageBoard.service.RenderPostService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 
@@ -35,6 +36,17 @@ public class BoardController {
 
 	@Autowired
 	ThreadRepository threadRepository;
+
+	// T E S T  F U N C T I O N 
+	// @ResponseBody
+	// @GetMapping("/findByBoardIdAndPostNumber/{boardId}/{postNumber}")
+	// public Long getMethodName(@PathVariable("boardId") Long boardId, @PathVariable("postNumber") Long postNumber) {
+	// 	System.out.println("EXECUTING findByBoardIdAndPostNumber");
+	// 	PostThread thread =threadRepository.findByBoardIdAndPostNumber(boardId, postNumber);
+
+	// 	return thread.getId();
+	// }
+	
 
 	
 	// @RequestMapping(path = "/board", method = RequestMethod.GET)
@@ -56,7 +68,7 @@ public class BoardController {
 
 	@GetMapping("/home")
 	public String homePage(Model model){
-		model.addAttribute("boardList", boardService.findAll());	
+		model.addAttribute("boardList", boardService.findAll());
 		return "home";
 	}
 
@@ -65,20 +77,48 @@ public class BoardController {
 		if (page == 1){
 			return "redirect:/"+boardCodeName;
 		}
+
+		int numberOfPages = renderPostService.findNumberOfPagesByBoardCodeName(boardCodeName);
+		model.addAttribute("board", boardService.findBoardByBoardCodeName(boardCodeName));
+		model.addAttribute("currentPage", page);
+		model.addAttribute("previousPage", page-1);
+		model.addAttribute("numberOfPages", numberOfPages);
+		if (page < numberOfPages){
+			model.addAttribute("nextPage", page+1); //For some strange reason, "/codeName/page" is added when rendering in Thymeleaf
+		}
+
 		model.addAttribute("threads", renderPostService.getThreadsPreview(boardCodeName, page));
 		return "homeBoard";
 	}
 
 	@GetMapping("/{boardCode}")
 	public String boardMainPage(@PathVariable("boardCode") String boardCodeName, Model model) {
+
+		int numberOfPages = renderPostService.findNumberOfPagesByBoardCodeName(boardCodeName);
+
 		model.addAttribute("board", boardService.findBoardByBoardCodeName(boardCodeName));
+		model.addAttribute("currentPage", 1);
+		model.addAttribute("numberOfPages", numberOfPages);
+		if (numberOfPages > 1){
+			model.addAttribute("nextPage", boardCodeName+"/2"); //here I have to add "codeName/" manually
+		}
 		model.addAttribute("threads", renderPostService.getThreadsPreview(boardCodeName, 1));
-
-		System.out.println("Board name: "+boardService.findBoardByBoardCodeName(boardCodeName).getName());
-
 		return "homeBoard";
-	}
+		}
+		
 
+
+		//T E S T
+		// @GetMapping("/{boardCode}/thread/{threadPostNumber}")
+		// public String displayThread(@PathVariable("boardCode") String boardCodeName, @PathVariable("threadPostNumber") Long threadPostNumber, Model model) {
+		// 	//GET THREAD ID
+		// 	renderPostService.getFullThread(boardCodeName, threadPostNumber);
+
+		// 	model.addAttribute("boardCodeName", boardCodeName);
+		// 	model.addAttribute("thread", renderPostService.getFullThread(boardCodeName, threadPostNumber));
+
+		// 	return "threadTemplate";
+		// }
 
 
 	// @GetMapping("/threadReplyCounter/{thread}")

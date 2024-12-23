@@ -11,13 +11,13 @@
     <a th:href="@{/home}">Return to Home Page</a>
     <div th:each="thread:${threads}">
       <a th:href="@{/{codeName}/thread/{postNumber}(postNumber=${thread.threadDTO.postNumber}, codeName=${board.codeName})}" th:text="'>>'+${thread.threadDTO.postNumber}"></a>
-      <p th:text="${thread.threadDTO.title}"></p>
+      <p th:text="${thread.threadDTO.title}"></p> <!--CHANGE >>1345 TO VIEW THREAD BUTTON-->
       <p th:text="${thread.threadDTO.nickname}"></p>
       <p th:text="${thread.threadDTO.uploadedAt}"></p>
       <p th:text="${thread.threadDTO.content}"></p>
       <div th:each="filename:${thread.threadDTO.mediaFilenames}">
-        <img th:src="'image/'+${filename}" style="max-width: 310px; height: 310px"/>
-        <a th:href="@{image/{filename}(filename = ${filename})}" target="_blank" th:text="${filename}"></a>
+        <img th:src="'/image/'+${filename}" style="max-width: 310px; height: 310px"/>
+        <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text="${filename}"></a>
       </div>
       <p th:text="'Replies: '+${thread.threadDTO.numberOfReplies}"></p>
       <p th:text="'Images: '+${thread.threadDTO.numberOfMedia}"></p>
@@ -29,15 +29,18 @@
             <p th:text="${response.content}"></p>
             
             <div th:each="filename:${response.mediaFilenames}">
-              <img th:src="'image/'+${filename}" style="max-width: 310px; height: 310px"/>
-              <a th:href="@{image/{filename}(filename = ${filename})}" target="_blank" th:text="${filename}"></a>
+              <img th:src="'/image/'+${filename}" style="max-width: 310px; height: 310px"/>
+              <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text="${filename}"></a>
             </div>
       </div>
    </div>
-   <!--
+   
+   <span th:if="${previousPage}"><a th:href="${previousPage}">Prev</a></span>
    <span th:each="i : ${#numbers.sequence( 1, numberOfPages)}">
-		<a th:href="@{/posts/{page}(page=${i})}" th:text="${i}"></a>
-   </span> -->
+		<span th:if="${i == currentPage}" th:text="${i}"></span>
+    <a th:if="${i != currentPage}" th:href="@{/{codeName}/{page}(page=${i}, codeName=${board.codeName})}" th:text="${i}"></a>
+   </span>
+   <span th:if="${nextPage}"><a th:href="${nextPage}">Next</a></span>
    <!--TODO add next and previous button-->
 </body>
 </html>

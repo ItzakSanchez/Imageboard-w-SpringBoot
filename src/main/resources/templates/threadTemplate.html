@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <a th:href="${'/'+boardCodeName}">Return board</a>
+  
+  <a th:href="@{/{codeName}/thread/{postNumber}(postNumber=${thread.threadDTO.postNumber}, codeName=${boardCodeName})}" th:text="'>>'+${thread.threadDTO.postNumber}"></a>
+  <p th:text="${thread.threadDTO.title}"></p> <!--CHANGE >>1345 TO VIEW THREAD BUTTON-->
+  <p th:text="${thread.threadDTO.nickname}"></p>
+  <p th:text="${thread.threadDTO.uploadedAt}"></p>
+  <p th:text="${thread.threadDTO.content}"></p>
+  <div th:each="filename:${thread.threadDTO.mediaFilenames}">
+    <img th:src="'/image/'+${filename}" style="max-width: 310px; height: 310px"/>
+    <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text="${filename}"></a>
+  </div>
+
+
+  <div th:each="response:${thread.replies}">
+    <a th:href="${boardCodeName}+'/thread/'+${thread.threadDTO.postNumber}+'#'+${response.postNumber}" th:text="'>>'+${response.postNumber}"></a>
+    <p th:text="${response.nickname}"></p>
+    <p th:text="${response.uploadedAt}"></p>
+    <p th:text="${response.content}"></p>
+    <div th:each="filename:${response.mediaFilenames}">
+      <img th:src="'/image/'+${filename}" style="max-width: 310px; height: 310px"/>
+      <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text="${filename}"></a>
+    </div>
+  </div>
+</body>
+</html>

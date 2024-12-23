@@ -20,6 +20,9 @@ public interface ThreadRepository extends JpaRepository<PostThread, Long>{
 	@Query("SELECT COUNT (m) from Media m  where m.post.thread.id =:threadId")
 	public int countMediaByThreadId(@Param("threadId") Long threadId);
 
+	@Query("SELECT t from PostThread t where t.board.id =:boardId AND t.postNumber =:postNumber")
+	public PostThread findByBoardIdAndPostNumber(@Param("boardId") Long boardId, @Param("postNumber") Long postNumber);
+
 	public List<PostThread> findByBoardId(Long boardId, Pageable pageable);
 	public List<PostThread> findByBoardId(Long boardId);
 
