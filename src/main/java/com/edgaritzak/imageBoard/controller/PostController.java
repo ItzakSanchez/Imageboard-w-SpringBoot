@@ -1,6 +1,7 @@
 package com.edgaritzak.imageBoard.controller;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.edgaritzak.imageBoard.dto.RequestReplyDTO;
-import com.edgaritzak.imageBoard.service.PostService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,43 +31,23 @@ public class PostController {
 	
 	int pageSize = 2;
 	
-//	@Autowired
-//	private PostService postSvc;
-
 	@Autowired
 	private ThreadService threadService;
-	
-//	@GetMapping("/posts")
-//	public String posts(Model model) {
-//		model.addAttribute("posts",postSvc.findAllMainPosts(1));
-//		
-//		model.addAttribute("numberOfPages",postSvc.numberOfPagesForMainPosts());
-//
-//		model.addAttribute("nextPage",2);
-//		model.addAttribute("previousPage","#");
-//		return "posts";
-//	}
-//	
-//	@GetMapping("/posts/{page}")
-//	public String postsPage(@PathVariable("page")int page ,Model model) {
-//		if(page == 1) {return "redirect:/posts";}
-//		try {
-//		model.addAttribute("posts",postSvc.findAllMainPosts(page));
-//		} catch(Exception ex) {
-//			model.addAttribute("errorMessage", ex.getMessage());
-//			return "error/404";
-//		}
-//		model.addAttribute("numberOfPages",postSvc.numberOfPagesForMainPosts());
-//		
-//		if(postSvc.numberOfPagesForMainPosts() == page) {
-//			model.addAttribute("nextPage","#");
-//		} else {
-//			model.addAttribute("nextPage",page+1);
-//		}
-//		model.addAttribute("previousPage",page-1);
-//		return "posts";
-//	}
-//	
+
+
+	@GetMapping("/favicon.ico")
+	public ResponseEntity<Resource> getFavicon() throws MalformedURLException {
+			Path faviconPath = Paths.get("src/main/resources/static/favicon.ico");
+			Resource faviconResource = new UrlResource(faviconPath.toUri());
+			if (faviconResource.exists() && faviconResource.isReadable()) {
+					return ResponseEntity.ok()
+									.contentType(MediaType.IMAGE_PNG) 
+									.body(faviconResource);
+			} else {
+					return ResponseEntity.notFound().build();
+			}
+	}
+
 	@GetMapping("/postThread")
 	public String postThread() {
 		return "postThread";

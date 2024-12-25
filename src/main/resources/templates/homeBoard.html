@@ -4,11 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'/'+${board.codeName}+'/ - '+${board.name}"></title>
-</head>
-<body>
+  </head>
+  <body>
     <h2 th:text="'/'+${board.codeName}+'/ - '+${board.name}"></h2>
+    <a th:href="@{/}">Return to Home Page</a> 
 
-    <a th:href="@{/home}">Return to Home Page</a>
+<!-- FORM -->
+<!-- FORM -->
+<!-- FORM -->
+ 
+  <form action="#" th:action="@{/uploadThread}" method="post" enctype="multipart/form-data" class="form">
+    <input type="hidden" th:value="${board.id}" name="boardId" id="boardId">
+    <label for="title">Title</label>
+    <input type="text" name="title" id="title"><br/>
+    <label for="nickname">Nickname</label>
+    <input type="text" name="nickname" id="nickname"><br/>
+    <label for="content">Content</label>
+    <input type="text" name="content" id="content"><br/>
+    <label for="images">Upload image</label>
+    <input type="file" name="images" id="images" multiple><br/>
+    <button type="submit">Upload</button>
+  </form>
+
+  <hr/>
+
+<!-- RENDER THREADS -->
+<!-- RENDER THREADS -->
+<!-- RENDER THREADS -->
+
     <div th:each="thread:${threads}">
       <a th:href="@{/{codeName}/thread/{postNumber}(postNumber=${thread.threadDTO.postNumber}, codeName=${board.codeName})}" th:text="'>>'+${thread.threadDTO.postNumber}"></a>
       <p th:text="${thread.threadDTO.title}"></p> <!--CHANGE >>1345 TO VIEW THREAD BUTTON-->
@@ -23,15 +46,16 @@
       <p th:text="'Images: '+${thread.threadDTO.numberOfMedia}"></p>
 
       <div th:each="response:${thread.replies}">
-        <a th:href="${board.codeName}+'/thread/'+${thread.threadDTO.postNumber}+'#'+${response.postNumber}" th:text="'>>'+${response.postNumber}"></a>
-        <p th:text="${response.nickname}"></p>
-            <p th:text="${response.uploadedAt}"></p>
-            <p th:text="${response.content}"></p>
-            
-            <div th:each="filename:${response.mediaFilenames}">
-              <img th:src="'/image/'+${filename}" style="max-width: 310px; height: 310px"/>
-              <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text="${filename}"></a>
-            </div>
+        <div class="thread">
+          <a th:href="'/'+${board.codeName}+'/thread/'+${thread.threadDTO.postNumber}+'#'+${response.postNumber}" th:text="'>>'+${response.postNumber}"></a>
+          <p th:text="${response.nickname}"></p>
+          <p th:text="${response.uploadedAt}"></p>
+          <p th:text="${response.content}"></p>
+          <div th:each="filename:${response.mediaFilenames}">
+            <img th:src="'/image/'+${filename}" style="max-width: 310px; height: 310px"/>
+            <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text="${filename}"></a>
+          </div>
+        </div>
       </div>
    </div>
    

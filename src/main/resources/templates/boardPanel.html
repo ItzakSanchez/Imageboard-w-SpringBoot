@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board Admin Panel</title>
+  </head>
+  <body>
+    <h2>Board Admin Panel</h2>
+    <a th:href="@{/}">Return to Home Page</a> 
+    <form th:action="${'board/updateBoardPage'}" method="post">
+      <td><button type="submit">➕ New Board</button></td>
+    </form>
+    <table th:if="${boardList}">
+      <thead>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Code Name</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </thead>
+      <tbody>
+        <div th:each="board:${boardList}">
+          <tr>
+            <td th:text="${board.id}"></td>
+            <td th:text="${board.name}"></td>
+            <td th:text="'/'+${board.codeName}+'/'"></td>
+            <form th:action="${'board/updateBoardPage'}" method="post">
+              <input type="hidden" name="id" th:value="${board.id}">
+              <td><button type="submit">✒️</button></td>
+            </form>
+            <form th:action="${'board/deleteBoard/'+board.id}" method="post">
+              <td><button type="submit">❌</button></td>
+            </form>
+          </tr>
+      </div>
+    </tbody>
+  </table>
+
+</body>
+</html>

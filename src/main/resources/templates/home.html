@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Board - Home</title>
+    <title>Digital World - Home</title>
+    
 </head>
 <body>
-    <h1>Welcome to Digital-Board</h1>
+    <h1>Welcome to Digital World</h1>
     <div>
       <p>Boards</p>
     </div>
     <div th:each="board:${boardList}">
-		  <a th:href="@{/{codeName}(codeName=${board.codeName})}" th:text="${board.name}"></a>
+		  <a th:href="@{/{codeName}/(codeName=${board.codeName})}" th:text="${board.name}"></a>
     </div>
+    <hr>
+    <a th:href="@{admin/board}">Admin panel</a>
 </body>
 </html>

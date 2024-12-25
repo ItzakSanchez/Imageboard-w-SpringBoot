@@ -26,9 +26,13 @@ public class BoardService {
 	public Optional<Board> findBoardById(Long id) {
 		return boardRepo.findById(id);
 	}
-	
+
 	public List<Board> findAll() {
 		return boardRepo.findAll();
+	}
+
+	public List<Board> findAllByOrderByIdAsc() {
+		return boardRepo.findAllByOrderByIdAsc();
 	}
 
 	public Board findBoardByBoardCodeName(String codeName) {
@@ -36,12 +40,40 @@ public class BoardService {
 	}
 
 	//CREATE NEW BOARD
+
 	@Transactional
 	public Board saveBoardAndCreateBoardIdCounter(Board board) {
 		board.setId(0L);
+		board.setCodeName(board.getCodeName().toLowerCase());
 		Board newBoard = boardRepo.save(board);
 		BoardIdCounter boardIdCounter = new BoardIdCounter(newBoard,1L);
 		boardIdCounterRepo.save(boardIdCounter);
 		return newBoard;
 	}
+
+
+	//UPDATE BOARD
+
+	public Board updateBoard(Board board){
+		Optional<Board> optionalBoard = boardRepo.findById(board.getId());
+		if (optionalBoard.isEmpty()){
+			throw new NoSuchElementException("Board not found");			
+		}
+
+		Board currentBoard = optionalBoard.get();
+			currentBoard.setName(board.getName());
+			currentBoard.setCodeName(board.getCodeName().toLowerCase());
+			return boardRepo.save(currentBoard);
+	}
+
+	//DELETE BOARD
+
+	public void deleteBoard(Long boardId){
+		Optional<Board> optionalBoard = boardRepo.findById(boardId);
+		if(optionalBoard.isEmpty()){
+			throw new NoSuchElementException("Board not found");
+		}
+		boardRepo.delete(optionalBoard.get());
+	}
+
 }

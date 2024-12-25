@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -12,6 +13,19 @@ import com.edgaritzak.imageBoard.Exceptions.NoImagesUploadedException;
 
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public String methodArgumentNotValid(MethodArgumentNotValidException ex, Model model){
+		String userFriendlyError = ex.getBindingResult()
+																										.getAllErrors()
+																										.stream()
+																										.map(error -> error.getDefaultMessage())
+																										.findFirst()
+																										.orElse("An unknown error occurred");
+		model.addAttribute("errorMessage", userFriendlyError);
+		return "error/errorPage";
+	}
 	
 	@ExceptionHandler(NoSuchElementException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
