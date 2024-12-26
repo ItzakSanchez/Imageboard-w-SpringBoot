@@ -36,6 +36,6 @@ public class CustomErrorController implements ErrorController {
 		};
 		
 		model.addAttribute("errorMessage", errorMessage);
-		return "error/error";
+		return "error/errorPage";
 	}	
 }

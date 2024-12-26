@@ -53,15 +53,16 @@ public class BoardController {
 
 	@GetMapping("/{boardCode}/") 
 	public String boardMainPage(@PathVariable("boardCode") String boardCodeName, Model model) {
-		System.out.println("TRYING TO ACCESS BOARD: "+boardCodeName);
 		int numberOfPages = renderPostService.findNumberOfPagesByBoardCodeName(boardCodeName);
 
 		model.addAttribute("board", boardService.findBoardByBoardCodeName(boardCodeName));
 		model.addAttribute("currentPage", 1);
 		model.addAttribute("numberOfPages", numberOfPages);
 		if (numberOfPages > 1){
-			model.addAttribute("nextPage", 2); //here I have to add "codeName/" manually
+			model.addAttribute("nextPage", 2);
 		}
+
+		model.addAttribute("boardList", boardService.findAllByOrderByIdAsc());
 		model.addAttribute("threads", renderPostService.getThreadsPreview(boardCodeName, 1));
 		return "homeBoard";
 	}
@@ -78,9 +79,10 @@ public class BoardController {
 		model.addAttribute("previousPage", page-1);
 		model.addAttribute("numberOfPages", numberOfPages);
 		if (page < numberOfPages){
-			model.addAttribute("nextPage", page+1); //For some strange reason, "/codeName/page" is added when rendering in Thymeleaf
+			model.addAttribute("nextPage", page+1);
 		}
 
+		model.addAttribute("boardList", boardService.findAllByOrderByIdAsc());
 		model.addAttribute("threads", renderPostService.getThreadsPreview(boardCodeName, page));
 		return "homeBoard";
 	}
@@ -89,6 +91,8 @@ public class BoardController {
 	public String displayThread(@PathVariable("boardCode") String boardCodeName, @PathVariable("threadPostNumber") Long threadPostNumber, Model model) {
 
 		model.addAttribute("boardCodeName", boardCodeName);
+
+		model.addAttribute("boardList", boardService.findAllByOrderByIdAsc());
 		model.addAttribute("thread", renderPostService.getFullThread(boardCodeName, threadPostNumber));
 
 		return "threadTemplate";

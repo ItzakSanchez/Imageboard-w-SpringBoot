@@ -1,5 +1,6 @@
 package com.edgaritzak.imageBoard.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -9,8 +10,10 @@ import java.util.List;
 import java.util.UUID;
 
 import com.edgaritzak.imageBoard.dto.RequestThreadDTO;
+import com.edgaritzak.imageBoard.service.BoardService;
 import com.edgaritzak.imageBoard.service.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -28,12 +31,19 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class PostController {
-	
-	int pageSize = 2;
-	
+		
 	@Autowired
 	private ThreadService threadService;
+	@Autowired
+	private BoardService boardService;
 
+	@RequestMapping("/static/**")
+  @ResponseBody
+	public FileSystemResource obtenerArchivo(HttpServletRequest request) {
+			String archivoPath = request.getRequestURI().substring("/static".length());
+			File archivo = new File("src/main/resources/static/" + archivoPath);
+			return new FileSystemResource(archivo);
+	}
 
 	@GetMapping("/favicon.ico")
 	public ResponseEntity<Resource> getFavicon() throws MalformedURLException {
@@ -48,21 +58,18 @@ public class PostController {
 			}
 	}
 
-	@GetMapping("/postThread")
-	public String postThread() {
-		return "postThread";
-	}
-	
-	@GetMapping("/postReply")
-	public String postReply() {
-		return "postReply";
-	}
-
 	@PostMapping("/uploadThread")
 	public String uploadThread(@ModelAttribute RequestThreadDTO requestThreadDTO, @RequestParam("images") List<MultipartFile> images, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		requestThreadDTO.setAuthorId(getCookie(request, response));
 		threadService.processNewThread(requestThreadDTO, images);
-		return "postedSuccessfully";
+
+		try{
+			Long boardId = requestThreadDTO.getBoardId();
+			String codeName =boardService.findBoardById(boardId).get().getCodeName();
+			return "redirect:/"+codeName;
+		} catch (Exception Ex){
+			return "redirect:/";
+		}
 	}
 
 
@@ -70,31 +77,33 @@ public class PostController {
 	public String uploadReply(@ModelAttribute RequestReplyDTO requestReplyDTO, @RequestParam("images") List<MultipartFile> images, HttpServletRequest request, HttpServletResponse response) throws IOException{
 		requestReplyDTO.setAuthorId(getCookie(request,response));
 		threadService.processNewReply(requestReplyDTO, images);
-		return "postedSuccessfully";
+
+
+		try{
+			Long threadId = requestReplyDTO.getThreadId();
+			Long boardId = threadService.findThreadById(threadId).get().getBoard().getId();
+			String codeName =boardService.findBoardById(boardId).get().getCodeName();
+			return "redirect:/"+codeName;
+		} catch (Exception Ex){
+			return "redirect:/";
+		}
 	}
 	
-	
-	 @GetMapping("/imageController")
-	 public String imageController() {
-		 return "imageController";
-	 }
-	 
-
     
-    @RequestMapping(path ={"/image/{filename}","posts/image/{filename}"}, method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<Resource> getImage(@PathVariable String filename) throws IOException {
-    	String IMAGE_DIR = "src\\main\\uploaded_images\\";
-        Path imagePath = Paths.get(IMAGE_DIR).resolve(filename).normalize();
-        Resource resource = new UrlResource(imagePath.toUri());
-        if (resource.exists() || resource.isReadable()) {
-        	String contentType = Files.probeContentType(imagePath);
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .body(resource);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+	@RequestMapping(path ={"/image/{filename}","posts/image/{filename}"}, method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Resource> getImage(@PathVariable String filename) throws IOException {
+		String IMAGE_DIR = "src\\main\\uploaded_images\\";
+		Path imagePath = Paths.get(IMAGE_DIR).resolve(filename).normalize();
+		Resource resource = new UrlResource(imagePath.toUri());
+		if (resource.exists() || resource.isReadable()) {
+			String contentType = Files.probeContentType(imagePath);
+				return ResponseEntity.ok()
+								.contentType(MediaType.parseMediaType(contentType))
+								.body(resource);
+		} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
     }
     
     
