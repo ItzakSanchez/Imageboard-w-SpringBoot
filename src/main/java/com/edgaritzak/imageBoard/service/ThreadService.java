@@ -16,6 +16,7 @@ import com.edgaritzak.imageBoard.model.Board;
 import com.edgaritzak.imageBoard.model.Media;
 import com.edgaritzak.imageBoard.model.Post;
 import com.edgaritzak.imageBoard.repository.MediaRepository;
+import com.edgaritzak.imageBoard.repository.PostRepository;
 import com.edgaritzak.imageBoard.repository.ReplyRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,8 @@ public class ThreadService {
 	private ThreadRepository threadRepo;
 	@Autowired
 	private ReplyRepository replyRepo;
+	@Autowired
+	private PostRepository postRepository;
 
 
 	@Autowired
@@ -176,5 +179,13 @@ public class ThreadService {
 		} catch(DataIntegrityViolationException ex) {
 			throw new DataIntegrityViolationException("An error occurred while saving the filename:" + ex);
 		}
+	}
+
+	public void deletePost(Long id){
+		Optional<Post> optionalPost = postRepository.findById(id);
+		if (optionalPost.isEmpty()){
+			throw new NoSuchElementException("Error finding post with id: "+id+" for deletion");
+		}
+		postRepository.deleteById(id);
 	}
 }

@@ -11,7 +11,7 @@ public class Reply extends Post {
 	
 	@JsonIgnore
 	@JoinColumn(name = "thread_id")
-	@ManyToOne(cascade = CascadeType.REMOVE)
+	@ManyToOne()
 	private PostThread thread;
 
 	public Reply() {}

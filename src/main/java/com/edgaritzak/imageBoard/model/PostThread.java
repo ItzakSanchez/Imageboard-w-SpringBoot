@@ -25,7 +25,7 @@ public class PostThread extends Post{
 	@Column(name = "is_pinned")
 	private boolean isPinned;
 
-	@OneToMany(mappedBy = "thread")
+	@OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Reply> replies;
 	
 	@JsonIgnore

@@ -34,6 +34,12 @@
 
     <div th:each="thread:${threads}">
       <a th:href="@{/{codeName}/thread/{postNumber}(postNumber=${thread.threadDTO.postNumber}, codeName=${board.codeName})}" th:text="'>>'+${thread.threadDTO.postNumber}"></a>
+      <form th:action="@{/deletePost}" method="post">
+        <input type="hidden" name="postId" th:value="${thread.threadDTO.id}">
+        <input type="hidden" name="boardCode" th:value="${board.codeName}">
+        <button type="submit">🗑️</button>
+      </form>
+      
       <p th:text="${thread.threadDTO.title}"></p> <!--CHANGE >>1345 TO VIEW THREAD BUTTON-->
       <p th:text="${thread.threadDTO.nickname}"></p>
       <p th:text="${thread.threadDTO.uploadedAt}"></p>
@@ -48,6 +54,11 @@
       <div th:each="response:${thread.replies}">
         <div class="thread">
           <a th:href="'/'+${board.codeName}+'/thread/'+${thread.threadDTO.postNumber}+'#'+${response.postNumber}" th:text="'>>'+${response.postNumber}"></a>
+          <form th:action="@{/deletePost}" method="post">
+            <input type="hidden" name="postId" th:value="${response.id}">
+            <input type="hidden" name="boardCode" th:value="${board.codeName}">
+            <button type="submit">🗑️</button>
+          </form>
           <p th:text="${response.nickname}"></p>
           <p th:text="${response.uploadedAt}"></p>
           <p th:text="${response.content}"></p>

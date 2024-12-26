@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class ResponseReplyDTO {
-	
+
+	private Long id;
 	private Long postNumber;
 	private String authorId;
 	private String nickname;
@@ -13,7 +14,8 @@ public class ResponseReplyDTO {
 	private List<String> mediaFilenames;
 	
 	public ResponseReplyDTO(){}
-	public ResponseReplyDTO(Long postNumber, String authorId, String nickname, String content, LocalDateTime uploadedAt, List<String> mediaFilenames) {
+	public ResponseReplyDTO(Long id, Long postNumber, String authorId, String nickname, String content, LocalDateTime uploadedAt, List<String> mediaFilenames) {
+		this.id = id;
 		this.postNumber = postNumber;
 		this.authorId = authorId;
 		this.nickname = nickname;
@@ -22,7 +24,12 @@ public class ResponseReplyDTO {
 		this.mediaFilenames = mediaFilenames;
 	}
 	
-	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public Long getPostNumber() {
 		return postNumber;
 	}

@@ -34,7 +34,7 @@ public abstract class Post {
 	@Column(name ="created_at")
 	private LocalDateTime createdAt;
 	
-	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Media> media;
 	
 	@Column(name ="post_number")

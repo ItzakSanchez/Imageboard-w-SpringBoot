@@ -14,6 +14,7 @@ import com.edgaritzak.imageBoard.model.Board;
 import com.edgaritzak.imageBoard.repository.ThreadRepository;
 import com.edgaritzak.imageBoard.service.BoardService;
 import com.edgaritzak.imageBoard.service.RenderPostService;
+import com.edgaritzak.imageBoard.service.ThreadService;
 
 import jakarta.validation.Valid;
 
@@ -37,7 +38,7 @@ public class BoardController {
 	private RenderPostService renderPostService;
 
 	@Autowired
-	ThreadRepository threadRepository;
+	ThreadService threadService;
 
 	@GetMapping("")
 	public String homePage(Model model){
@@ -92,6 +93,15 @@ public class BoardController {
 
 		return "threadTemplate";
 	}
+
+	
+	@PostMapping("/deletePost")
+	public String postMethodName(@RequestParam("postId") Long postId, @RequestParam("boardCode") String boardCode) {
+
+		threadService.deletePost(postId);
+		return "redirect:/"+boardCode+"/";
+	}
+	
 
 
 

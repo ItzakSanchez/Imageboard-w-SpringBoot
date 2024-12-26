@@ -106,6 +106,7 @@ public class RenderPostService {
 							//GET 3 REPLIES FOR EACH THREAD
 							returnLastReplies(thread.getId(), 3).stream()
 								.map(reply -> new ResponseReplyDTO(
+									reply.getId(),
 									reply.getPostNumber(),
 									reply.getAuthorId(),
 									reply.getNickname(),
@@ -152,6 +153,7 @@ public class RenderPostService {
 						//GET ALL REPLIES FOR EACH THREAD
 						returnAllReplies(rawThread.getId()).stream()
 							.map(reply -> new ResponseReplyDTO(
+								reply.getId(),
 								reply.getPostNumber(),
 								reply.getAuthorId(),
 								reply.getNickname(),
