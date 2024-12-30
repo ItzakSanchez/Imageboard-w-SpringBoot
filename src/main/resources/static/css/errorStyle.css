@@ -1,0 +1,38 @@
+.roboto-mono-text {
+  
+}
+
+body{
+  margin: auto;
+  width: 700px;
+  
+
+  font-family: roboto;
+  background-color: #000;
+  color: white;
+
+  font-family: "Roboto Mono", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+/* a{
+  color: #d11507 !important;
+} */
+img{
+  width: 65%;
+  height: 65%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.errorTitle, .errorContent{
+  border: white solid 1px;
+}
+
+h1{
+  border: white solid 1px;
+  margin-bottom: 0px;
+}

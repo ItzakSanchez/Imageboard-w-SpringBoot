@@ -38,3 +38,8 @@ button:hover{
   color: #0c0f0a;
   background-color: white;
 }
+
+table, td ,th{
+  border: white solid 1px;
+  color: white;
+}

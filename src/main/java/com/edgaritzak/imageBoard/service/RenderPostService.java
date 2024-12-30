@@ -55,7 +55,7 @@ public class RenderPostService {
 	public int findNumberOfPagesByBoardCodeName(String boardCode){
 		Optional<Board> optionalBoard = boardRepository.findByCodeName(boardCode);
 		if (optionalBoard.isEmpty()){
-			throw new NoSuchElementException("Board Not Found 1");
+			throw new NoSuchElementException("Board Not Found");
 		}
 		Board board = optionalBoard.get();
 		Long boardId = board.getId();
@@ -71,7 +71,7 @@ public class RenderPostService {
 	
 	//SHOW LIST OF OF PREVIEWS 
 	public List<ResponseThreadWithRepliesDTO> getThreadsPreview(String boardCode, int page){
-		Board board = boardRepository.findByCodeName(boardCode).orElseThrow(()-> new NoSuchElementException("Board Not found 2"));
+		Board board = boardRepository.findByCodeName(boardCode).orElseThrow(()-> new NoSuchElementException("Board Not found"));
 		Long boardId = board.getId();
 
 		//Find Number of pages available and if provide page is valid
@@ -124,7 +124,7 @@ public class RenderPostService {
 
 	//SHOW FULL THREAD
 	public ResponseThreadWithRepliesDTO getFullThread(String boardCode, Long postNumber){
-		Board board = boardRepository.findByCodeName(boardCode).orElseThrow(()-> new NoSuchElementException("Board Not found 3"));
+		Board board = boardRepository.findByCodeName(boardCode).orElseThrow(()-> new NoSuchElementException("Board Not found"));
 		Long boardId = board.getId();
 
 

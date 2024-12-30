@@ -28,6 +28,9 @@ import com.edgaritzak.imageBoard.dto.RequestReplyDTO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class PostController {
@@ -36,6 +39,17 @@ public class PostController {
 	private ThreadService threadService;
 	@Autowired
 	private BoardService boardService;
+
+	@GetMapping("/login")
+	public String loginPage() {
+		return "login";
+	}
+
+	@GetMapping("/logout")
+	public String logout() {
+		return "/";
+	}
+	
 
 	@RequestMapping("/static/**")
   @ResponseBody

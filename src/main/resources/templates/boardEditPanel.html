@@ -5,40 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Board Admin Panel</title>
 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
   <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/boardEditStyle.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital@0;1&display=swap" rel="stylesheet">
   
 </head>
 <body>
-  <h2>Board Admin Panel</h2>
-  <a th:href="@{/admin/board}">Return</a> 
-  <table th:if="${board}">
-    <tr>
-      <td>Id</th>
-      <td>Name</th>
-      <td>Code Name</th>
-    </tr>
+  <div class="container my-4">
+    <h2>Board Admin Panel</h2>
+    <a th:href="@{/admin/board}">Return</a> 
+  </div>
+  
+  <div th:if="${board}" class="container">
+    <p>Name: It can only contain letters and numbers. Whitespace  not allowed. Maximum length: 50 characters<br>
+      Code Name: It can only contain letters and numbers. Whitespace not allowed. Maximum length: 5 characters</p>
     <form action="#" th:action="@{/admin/board/updateBoard}" method="post">
       <input type="hidden" name="id" th:value="${board.id}">
-      <td><p th:text="${board.id}"></p></td>
-      <td><input type="text" th:placeholder="${board.name}" name="name" required></td>
-      <td><input type="text" th:placeholder="${board.codeName}" name="codeName" required></td>
-      <td><button type="submit">Update</button></td>
+      <table class="my-5">
+        <tr>
+          <td>Id</td>
+          <td><span th:text="${board.id}"></span></td>
+        </tr>
+        <tr>
+          <td>Name</td>
+          <td><input type="text" th:placeholder="${board.name}" name="name" required></td>
+        </tr>
+        <tr>
+          <td>Code Name</td>
+          <td><input type="text" th:placeholder="${board.codeName}" name="codeName" required></td>
+        </tr>
+      </table>
+      <button type="submit">Update Board</button>
     </form>
-  </table>
-  <table th:unless="${board}">
-    <tr>
-      <td>Name</th>
-      <td>Code Name</th>
-    </tr>
+  </div>
+ 
+
+  <div th:unless="${board}" class="container">
     <form action="#" th:action="@{/admin/board/addBoard}" method="post">
-      <input type="hidden" name="id" value="">
-      <td><input type="text" placeholder="Name" name="name" required></td>
-      <td><input type="text" placeholder="Code name" name="codeName" required></td>
-      <td><button type="submit">Create new board</button></td>
+      <p>Name: It can only contain letters and numbers. Whitespace  not allowed. Maximum length: 50 characters<br>
+        Code Name: It can only contain letters and numbers. Whitespace not allowed. Maximum length: 5 characters</p>
+      <table class="my-5">
+        <input type="hidden" name="id" value="">
+        <tr>
+          <td>Name</th>
+          <td><input type="text" placeholder="Name" name="name" required></td>
+        </tr>
+        <tr>
+          <td>Code Name</th>
+          <td><input type="text" placeholder="Code name" name="codeName" required ></td>
+        </tr>
+      </table>
+      <button type="submit">Create new board</button>
     </form>
-  </table>
+  </div>
+  
 </body>
 </html>
