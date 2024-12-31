@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import com.edgaritzak.imageBoard.Exceptions.NoImagesUploadedException;
 
@@ -35,7 +36,7 @@ public class GlobalControllerExceptionHandler {
 	}
 
 	//Bad Request
-	@ExceptionHandler({IllegalArgumentException.class, HttpRequestMethodNotSupportedException.class , NoImagesUploadedException.class})
+	@ExceptionHandler({IllegalArgumentException.class, HttpRequestMethodNotSupportedException.class , NoImagesUploadedException.class, MaxUploadSizeExceededException.class})
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public String illegalArgumentExceptionHandler(Model model, Exception ex) {
 		//response.setStatus(HttpStatus.BAD_REQUEST.value()); -> HttpServletResponse response

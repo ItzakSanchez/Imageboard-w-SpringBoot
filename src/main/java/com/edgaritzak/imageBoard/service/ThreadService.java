@@ -60,6 +60,9 @@ public class ThreadService {
 		if(images.get(0).isEmpty()) {
 			throw new NoImagesUploadedException("You must upload at least one image to create a new thread.");
 		}
+		if(images.size()>4){
+			throw new IllegalArgumentException("The maximum number of images per post is 4");
+		}
 		
 		PostThread thread = saveThread(requestThreadDTO);
 		for(MultipartFile image: images){
@@ -73,6 +76,9 @@ public class ThreadService {
 	
 	@Transactional
 	public Reply processNewReply(RequestReplyDTO requestReplyDTO, List<MultipartFile> images) throws IOException {
+		if(images.size()>4){
+			throw new IllegalArgumentException("The maximum number of images per post is 4");
+		}
 		Reply reply = saveReply(requestReplyDTO);
 		for(MultipartFile image: images){
 			if(!image.isEmpty()) {

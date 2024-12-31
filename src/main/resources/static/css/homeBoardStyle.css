@@ -2,6 +2,31 @@
   
 }
 
+nav{
+  font-size: 12px;
+}
+
+.postNickname{
+  color: green;
+  font-weight: bold;
+}
+
+.postDate, .postInfo{
+  font-style: italic;
+  font-size: 13px;
+}
+
+.postTitle{
+  font-weight: bold;
+  color: red;
+}
+
+
+.pagination{
+  display: inline-block;
+  color: white;
+}
+
 .response{
   border: rgb(150, 150, 150) 1px solid;
   border-radius: 8px;

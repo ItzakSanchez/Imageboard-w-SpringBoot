@@ -23,13 +23,13 @@
   <nav class="nav">
     <span>
       [
-      <a href="/"><img src="/static/images/icons/home_icon.png" alt="" width="25" height="25"></a>
+      <a href="/"><img src="/static/images/icons/home_icon.png" alt="" width="22" height="22"></a>
       <span th:each="board:${boardList}">
         /
         <a th:href="${'/'+board.codeName}" th:text="${board.codeName}"></a>
       </span>
       /
-      <a href="/admin/board"><img src="/static/images/icons/gear_icon.png" alt="" width="25" height="25"></a> <!--vertical-align: middle -->
+      <a href="/admin/board"><img src="/static/images/icons/gear_icon.png" alt="" width="22" height="22"></a> <!--vertical-align: middle -->
       ]
     </span>
     <span>
@@ -98,48 +98,52 @@
         <button type="submit">🗑️</button>
       </form>
       
-      <div th:each="filename:${thread.threadDTO.mediaFilenames}">
-        <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text="${filename}"></a><br>
-        <img th:src="'/image/'+${filename}" style="max-width: 310px; height: 310px"/>
+      <div class="container d-flex flex-wrap">
+        <div th:each="filename:${thread.threadDTO.mediaFilenames}" class="mx-2">
+          <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text=${#strings.abbreviate(filename,20)} th:title="${filename}"></a><br>
+          <img th:src="'/image/'+${filename}" style="max-width: 270px; height: 270px"/>
+        </div>
       </div>
-      <span th:text="${thread.threadDTO.title}"></span> <!--CHANGE >>1345 TO VIEW THREAD BUTTON-->
-      <span th:text="${thread.threadDTO.nickname}"></span>
-      <span th:text="${thread.threadDTO.uploadedAt}"></span>
-      <span><a th:href="@{/{codeName}/thread/{postNumber}(postNumber=${thread.threadDTO.postNumber}, codeName=${board.codeName})}" th:text="'>>'+${thread.threadDTO.postNumber}"></a></span>
-      <p th:text="${thread.threadDTO.content}" class="my-4"></p>
+      <span th:text="${thread.threadDTO.title}" class="postTitle"></span> <!--CHANGE >>1345 TO VIEW THREAD BUTTON-->
+      <span th:text="${thread.threadDTO.nickname}" class="postNickname"></span>
+      <span th:text="${thread.threadDTO.uploadedAt}" class="postDate"></span>
+      <a th:href="@{/{codeName}/thread/{postNumber}(postNumber=${thread.threadDTO.postNumber}, codeName=${board.codeName})}" th:text="'>>'+${thread.threadDTO.postNumber}"></a>
+      <p th:text="${thread.threadDTO.content}" class="my-4 text-break"></p>
+      <p th:text="${thread.threadDTO.numberOfReplies}+' replies and '+${thread.threadDTO.numberOfMedia}+' images'" class="postInfo"></p>
 
-    
 
-      <p th:text="${thread.threadDTO.numberOfReplies}+' replies and '+${thread.threadDTO.numberOfMedia}+' images'"></p>
 
-      <div th:each="response:${thread.replies}">
-        <div class="response">
-          <a th:href="'/'+${board.codeName}+'/thread/'+${thread.threadDTO.postNumber}+'#'+${response.postNumber}" th:text="'>>'+${response.postNumber}"></a>
-          <form th:action="@{/deletePost}" method="post">
-            <input type="hidden" name="postId" th:value="${response.id}">
-            <input type="hidden" name="boardCode" th:value="${board.codeName}">
-            <button type="submit">🗑️</button>
-          </form>
-          <p th:text="${response.nickname}"></p>
-          <p th:text="${response.uploadedAt}"></p>
-          <p th:text="${response.content}"></p>
-          <div th:each="filename:${response.mediaFilenames}">
-            <img th:src="'/image/'+${filename}" style="max-width: 310px; height: 310px"/>
-            <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text="${filename}"></a>
-          </div>
+      <div th:each="response:${thread.replies}" class="response">
+        <div class="container d-flex flex-wrap">
+          <p th:each="filename:${response.mediaFilenames}" class="mx-2">
+            <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text="${#strings.abbreviate(filename,20)}" th:title="${filename}"></a>
+            <br>
+            <img th:src="'/image/'+${filename}" style="max-width: 270px; height: 270px"/>
+          </p>
+        </div>
+        <div class="container mx-2">
+          <span th:text="${response.nickname}" class="postNickname"></span>
+          <span th:text="${response.uploadedAt}" class="postDate"></span>
+          <span><a th:href="'/'+${board.codeName}+'/thread/'+${thread.threadDTO.postNumber}+'#'+${response.postNumber}" th:text="'>>'+${response.postNumber}"></a></span>
+        </div>
+        <form th:action="@{/deletePost}" method="post" class="container mx-2 my-2">
+          <input type="hidden" name="postId" th:value="${response.id}">
+          <input type="hidden" name="boardCode" th:value="${board.codeName}">
+          <span><button type="submit">🗑️</button></span>
+        </form>
+        <div class="container mx-2 my-4">
+          <p th:text="${response.content}" class="text-break"></p>
         </div>
       </div>
    </div>
    
-   <div class="pagination" id="footer">
-    <span th:if="${previousPage}"><a th:href="${previousPage}">Prev</a></span>
+   <div class="pagination response " id="footer">
+    <span th:if="${previousPage}"><a th:href="${previousPage}" class="me-1">Prev</a></span>
     <span th:each="i : ${#numbers.sequence( 1, numberOfPages)}">
-     <span th:if="${i == currentPage}" th:text="${i}"></span>
-     <a th:if="${i != currentPage}" th:href="@{/{codeName}/{page}(page=${i}, codeName=${board.codeName})}" th:text="${i}"></a>
+     <span th:if="${i == currentPage}" th:text="${i}"> </span>
+     <a th:if="${i != currentPage}" th:href="@{/{codeName}/{page}(page=${i}, codeName=${board.codeName})}" th:text="${i}" class="me-1"></a>
     </span>
-    <span th:if="${nextPage}"><a th:href="${nextPage}">Next</a></span>
+    <span th:if="${nextPage}"><a th:href="${nextPage}" class="me-1">Next</a></span>
    </div>
-
-   <!--TODO add next and previous button-->
 </body>
 </html>
