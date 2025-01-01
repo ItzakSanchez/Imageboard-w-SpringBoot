@@ -21,13 +21,13 @@
   <nav class="nav">
     <span>
       [
-      <a href="/"><img src="/static/images/icons/home_icon.png" alt="" width="25" height="25"></a>
+      <a href="/"><img src="/static/images/icons/home_icon.png" alt="" width="22" height="22"></a>
       <span th:each="board:${boardList}">
         /
         <a th:href="${'/'+board.codeName}" th:text="${board.codeName}"></a>
       </span>
       /
-      <a href="/admin/board"><img src="/static/images/icons/gear_icon.png" alt="" width="25" height="25"></a> <!--vertical-align: middle -->
+      <a href="/admin/board"><img src="/static/images/icons/gear_icon.png" alt="" width="22" height="22"></a> <!--vertical-align: middle -->
       ]
     </span>
     <span>

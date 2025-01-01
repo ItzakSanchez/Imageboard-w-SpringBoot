@@ -2,9 +2,12 @@
   
 }
 
-nav{
+/* nav{
   font-size: 12px;
-}
+  width: 100%;
+  background-color: #2c2c2c;
+  position: fixed;
+} */
 
 .postNickname{
   color: green;
@@ -74,11 +77,6 @@ table, td ,th{
   color: white;
 }
 
-nav{
-  width: 100%;
-  background-color: #2c2c2c;
-  position: fixed;
-}
 
 textarea{
   width: 100%;

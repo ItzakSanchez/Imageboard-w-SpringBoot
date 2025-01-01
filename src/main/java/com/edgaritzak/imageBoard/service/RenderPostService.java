@@ -27,7 +27,7 @@ import com.edgaritzak.imageBoard.repository.ThreadRepository;
 public class RenderPostService {
 	
 	
-	private int NUMBER_OF_REPLIES_PREVIEW = 3;
+	//private int NUMBER_OF_REPLIES_PREVIEW = 3;
 	private int NUMBER_OF_THREADS_PER_PAGE = 2;
 	private int MAX_NUMBER_OF_PAGES = 10;
 

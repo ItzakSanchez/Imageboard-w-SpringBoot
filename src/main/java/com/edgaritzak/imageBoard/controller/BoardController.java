@@ -6,12 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.edgaritzak.imageBoard.model.Board;
-import com.edgaritzak.imageBoard.repository.ThreadRepository;
 import com.edgaritzak.imageBoard.service.BoardService;
 import com.edgaritzak.imageBoard.service.RenderPostService;
 import com.edgaritzak.imageBoard.service.ThreadService;
@@ -19,10 +17,7 @@ import com.edgaritzak.imageBoard.service.ThreadService;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -44,6 +39,12 @@ public class BoardController {
 	public String homePage(Model model){
 		model.addAttribute("boardList", boardService.findAllByOrderByIdAsc());
 		return "home";
+	}
+
+	@GetMapping("/about")
+	public String aboutPage(Model model){
+		model.addAttribute("boardList", boardService.findAllByOrderByIdAsc());
+		return "about";
 	}
 
 	@GetMapping("/{boardCode}")
