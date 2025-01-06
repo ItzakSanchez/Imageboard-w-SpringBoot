@@ -42,9 +42,6 @@
       
   </nav>
 
-  <!-- <img src="/images/home_icon.png" alt=""> -->
-
-
   <div class="container pt-5 mb-4 d-flex justify-content-center">
     <h2 th:text="'/'+${board.codeName}+'/ - '+${board.name}" id="boardTitle"></h2>
   </div>
@@ -70,7 +67,7 @@
         </tr>
         <tr>
           <td><label for="content">Comment</label></td>
-          <td><textarea name="content" id="content"></textarea></td> <!--<input type="text" name="content" id="content">-->
+          <td><textarea name="content" id="content"></textarea></td>
         </tr>
         <tr>
           <td><label for="images">Upload images</label></td>
@@ -100,8 +97,10 @@
       
       <div class="container d-flex flex-wrap">
         <div th:each="filename:${thread.threadDTO.mediaFilenames}" class="mx-2">
-          <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text=${#strings.abbreviate(filename,20)} th:title="${filename}"></a><br>
-          <img th:src="'/image/'+${filename}" style="max-width: 270px; height: 270px"/>
+          <a th:href="@{https://drive.google.com/file/d/{filename}/view (filename = ${filename})}" target="_blank" th:text=${#strings.abbreviate(filename,20)} th:title="${filename}"></a><br>
+          <img th:src="${'https://drive.google.com/thumbnail?id='+filename+'&sz=w270'}">
+
+
         </div>
       </div>
       <span th:text="${thread.threadDTO.title}" class="postTitle"></span> <!--CHANGE >>1345 TO VIEW THREAD BUTTON-->
@@ -116,9 +115,11 @@
       <div th:each="response:${thread.replies}" class="response">
         <div class="container d-flex flex-wrap">
           <p th:each="filename:${response.mediaFilenames}" class="mx-2">
-            <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text="${#strings.abbreviate(filename,20)}" th:title="${filename}"></a>
+            <a th:href="@{https://drive.google.com/file/d/{filename}/view(filename = ${filename})}" target="_blank" th:text="${#strings.abbreviate(filename,20)}" th:title="${filename}"></a>
             <br>
-            <img th:src="'/image/'+${filename}" style="max-width: 270px; height: 270px"/>
+            <img th:src="${'https://drive.google.com/thumbnail?id='+filename+'&sz=w270'}">
+
+
           </p>
         </div>
         <div class="container mx-2">

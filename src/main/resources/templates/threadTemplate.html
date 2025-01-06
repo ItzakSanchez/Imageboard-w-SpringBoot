@@ -90,31 +90,31 @@
       </form>
       <div class="container d-flex flex-wrap">
         <div th:each="filename:${thread.threadDTO.mediaFilenames}" class="mx-2">
-          <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text="${#strings.abbreviate(filename,20)}" th:title="${filename}"></a>
+          <a th:href="@{https://drive.google.com/file/d/{filename}/view(filename = ${filename})}" target="_blank" th:text="${#strings.abbreviate(filename,20)}" th:title="${filename}"></a>
           <br>
-          <img th:src="'/image/'+${filename}" style="max-width: 270px; height: 270px"/>
+          <img th:src="${'https://drive.google.com/thumbnail?id='+filename+'&sz=w270'}">
         </div>
       </div>
 
-      
-      <span th:text="${thread.threadDTO.title}" class="postTitle"></span> <!--CHANGE >>1345 TO VIEW THREAD BUTTON-->
+      <span th:text="${thread.threadDTO.title}" class="postTitle"></span>
       <span th:text="${thread.threadDTO.nickname}" class="postNickname"></span>
       <span th:text="${thread.threadDTO.uploadedAt}" class="postDate"></span>
       <a th:href="@{/{codeName}/thread/{postNumber}(postNumber=${thread.threadDTO.postNumber}, codeName=${boardCodeName})}" th:text="'>>'+${thread.threadDTO.postNumber}"></a>
-      <p th:text="${thread.threadDTO.content}" class="my-4 text-break"></p>
-      
+      <p th:text="${thread.threadDTO.content}" class="my-4 text-break"></p>    
     </div>
-  
+
+      <!-- RENDER REPLIES -->
+      <!-- RENDER REPLIES -->
+      <!-- RENDER REPLIES -->
   
     <div th:each="response:${thread.replies}" class="response">
       <div class="container d-flex flex-wrap">
         <p th:each="filename:${response.mediaFilenames}" class="mx-2">
-          <a th:href="@{/image/{filename}(filename = ${filename})}" target="_blank" th:text="${#strings.abbreviate(filename,20)}" th:title="${filename}"></a>
+          <a th:href="@{https://drive.google.com/file/d/{filename}/view(filename = ${filename})}" target="_blank" th:text="${#strings.abbreviate(filename,20)}" th:title="${filename}"></a>
           <br>
-          <img th:src="'/image/'+${filename}" style="max-width: 270px; height: 270px"/>
+          <img th:src="${'https://drive.google.com/thumbnail?id='+filename+'&sz=w270'}">
         </p>
       </div>
-  
   
       <div th:id="${response.postNumber}">
         <div class="container mx-2">

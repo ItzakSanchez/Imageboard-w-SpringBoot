@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ import com.edgaritzak.imageBoard.dto.RequestThreadDTO;
 import com.edgaritzak.imageBoard.service.BoardService;
 import com.edgaritzak.imageBoard.service.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -20,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,8 +29,6 @@ import com.edgaritzak.imageBoard.dto.RequestReplyDTO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -53,10 +52,15 @@ public class PostController {
 
 	@RequestMapping("/static/**")
   @ResponseBody
-	public FileSystemResource obtenerArchivo(HttpServletRequest request) {
+	public ResponseEntity<?>  obtenerArchivo(HttpServletRequest request) {
 			String archivoPath = request.getRequestURI().substring("/static".length());
-			File archivo = new File("src/main/resources/static/" + archivoPath);
-			return new FileSystemResource(archivo);
+			// File archivo = new File("src/main/resources/static/" + archivoPath);
+			ClassPathResource archivo = new ClassPathResource("static" + archivoPath);
+			String contentType = "text/css";
+
+			return ResponseEntity.ok()
+                .header("Content-Type", contentType) // Configura el tipo de contenido adecuado
+                .body(archivo);
 	}
 
 	@GetMapping("/favicon.ico")
@@ -73,7 +77,7 @@ public class PostController {
 	}
 
 	@PostMapping("/uploadThread")
-	public String uploadThread(@ModelAttribute RequestThreadDTO requestThreadDTO, @RequestParam("images") List<MultipartFile> images, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String uploadThread(@ModelAttribute RequestThreadDTO requestThreadDTO, @RequestParam("images") List<MultipartFile> images, HttpServletRequest request, HttpServletResponse response) throws IOException,GeneralSecurityException{
 		requestThreadDTO.setAuthorId(getCookie(request, response));
 		threadService.processNewThread(requestThreadDTO, images);
 
@@ -88,7 +92,7 @@ public class PostController {
 
 
 	@PostMapping("/uploadReply")
-	public String uploadReply(@ModelAttribute RequestReplyDTO requestReplyDTO, @RequestParam("images") List<MultipartFile> images, HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public String uploadReply(@ModelAttribute RequestReplyDTO requestReplyDTO, @RequestParam("images") List<MultipartFile> images, HttpServletRequest request, HttpServletResponse response) throws IOException, GeneralSecurityException{
 		requestReplyDTO.setAuthorId(getCookie(request,response));
 		threadService.processNewReply(requestReplyDTO, images);
 
@@ -121,11 +125,11 @@ public class PostController {
     }
     
     
-	 @GetMapping("/cookie")
-	 public String cookie(Model model, HttpServletRequest request, HttpServletResponse response) {
-		 model.addAttribute("cookie",getCookie(request, response));
-		 return "cookie";
-	 }
+	//  @GetMapping("/cookie")
+	//  public String cookie(Model model, HttpServletRequest request, HttpServletResponse response) {
+	// 	 model.addAttribute("cookie",getCookie(request, response));
+	// 	 return "cookie";
+	//  }
 	
 	public String getCookie(HttpServletRequest request, HttpServletResponse response) {
 		String idPoster;

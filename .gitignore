@@ -6,4 +6,10 @@ bin/
 
 .classpath
 .project
+.idea/
 .settings/
+.vscode/
+
+
+credentials.json
+src/main/uploaded_images/

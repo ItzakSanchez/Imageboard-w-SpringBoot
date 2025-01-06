@@ -1,5 +1,6 @@
 package com.edgaritzak.imageBoard.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +120,14 @@ public class BoardController {
 
 	@PostMapping("/admin/board/addBoard")
 	public String addBoard(@Valid @ModelAttribute Board board, Model model) {
+		
+		List<String> bannedCodeNames = List.of("login", "logout", "error", "about", "admin", "image", "static");
+		for (String codeName : bannedCodeNames) {
+			if (board.getCodeName().toLowerCase().equals(codeName)){
+				throw new IllegalArgumentException("Invalid Board Code Name. Reserved word code");
+			}
+		}
+
 		boardService.saveBoardAndCreateBoardIdCounter(board);
 		return "redirect:/admin/board";
 	}
@@ -133,9 +142,14 @@ public class BoardController {
 
 	@PostMapping("/admin/board/updateBoard")
 	public String updateBoard(@Valid @ModelAttribute Board board, Model model) {
-		System.out.println(board);
-		System.out.println(board.getId());
-		
+
+		List<String> bannedCodeNames = List.of("login", "logout", "error", "about", "admin", "image", "static");
+		for (String codeName : bannedCodeNames) {
+			if (board.getCodeName().toLowerCase().equals(codeName)){
+				throw new IllegalArgumentException("Invalid Board Code Name. Reserved word code");
+			}
+		}
+
 		boardService.updateBoard(board);
 		return "redirect:/admin/board";
 	}

@@ -1,14 +1,10 @@
 package com.edgaritzak.imageBoard.service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
-
 import com.edgaritzak.imageBoard.Exceptions.NoImagesUploadedException;
 import com.edgaritzak.imageBoard.dto.RequestReplyDTO;
 import com.edgaritzak.imageBoard.dto.RequestThreadDTO;
@@ -43,6 +39,8 @@ public class ThreadService {
 	private ReplyRepository replyRepo;
 	@Autowired
 	private PostRepository postRepository;
+	@Autowired
+	private GoogleDriveAPIService googleDriveAPIService;
 
 
 	@Autowired
@@ -56,7 +54,7 @@ public class ThreadService {
 	}
 	
 	@Transactional
-	public PostThread processNewThread(RequestThreadDTO requestThreadDTO, List<MultipartFile> images) throws IOException {
+	public PostThread processNewThread(RequestThreadDTO requestThreadDTO, List<MultipartFile> images) throws IOException, GeneralSecurityException{
 		if(images.get(0).isEmpty()) {
 			throw new NoImagesUploadedException("You must upload at least one image to create a new thread.");
 		}
@@ -67,7 +65,7 @@ public class ThreadService {
 		PostThread thread = saveThread(requestThreadDTO);
 		for(MultipartFile image: images){
 			if(!image.isEmpty()) {		
-				String filename = saveImage(image);
+				String filename = googleDriveAPIService.uploadImage(image);
 				saveImagePath(thread, filename);
 			}
 		}
@@ -75,14 +73,14 @@ public class ThreadService {
 	}
 	
 	@Transactional
-	public Reply processNewReply(RequestReplyDTO requestReplyDTO, List<MultipartFile> images) throws IOException {
+	public Reply processNewReply(RequestReplyDTO requestReplyDTO, List<MultipartFile> images) throws IOException, GeneralSecurityException{
 		if(images.size()>4){
 			throw new IllegalArgumentException("The maximum number of images per post is 4");
 		}
 		Reply reply = saveReply(requestReplyDTO);
 		for(MultipartFile image: images){
 			if(!image.isEmpty()) {
-				String filename = saveImage(image);
+				String filename = googleDriveAPIService.uploadImage(image);
 				saveImagePath(reply, filename);
 			}
 		}
@@ -155,27 +153,6 @@ public class ThreadService {
 		}
 	}
 	
-
-	/*SAVE MEDIA TO LOCAL FOLDER*/
-	private String saveImage(MultipartFile image) throws IOException {
-		if(image == null || image.isEmpty()) {
-			return null;
-			//throw new IOException("Can not update the file.");
-		}
-		if(!image.getContentType().startsWith("image/")) {
-			throw new IOException("Only image files.");
-		}
-
-		String randomUuid = UUID.randomUUID()+"-"+image.getOriginalFilename();
-		Path imagePath = Paths.get("src/main/uploaded_images/"+randomUuid);
-		try{
-			Files.write(imagePath, image.getBytes());
-		} catch (IOException ex){
-			throw ex;
-		}
-
-		return String.valueOf(randomUuid);
-	}
 
 	/*SAVE MEDIA FILENAME ON DATABASE*/
 	private void saveImagePath(Post post, String filename) {
