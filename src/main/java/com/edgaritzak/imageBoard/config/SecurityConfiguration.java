@@ -2,12 +2,14 @@ package com.edgaritzak.imageBoard.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
   @Bean
@@ -32,13 +34,4 @@ public class SecurityConfiguration {
             )
             .build();
   } 
-
-  // @Bean
-  // public UserDetailsService userDetails(){
-  //   UserDetails user = User.withUsername("itzak")
-  //       .password("{noop}pw1")
-  //       .roles("ADMIN")
-  //       .build();
-  //   return new InMemoryUserDetailsManager(user);
-  // }
 }

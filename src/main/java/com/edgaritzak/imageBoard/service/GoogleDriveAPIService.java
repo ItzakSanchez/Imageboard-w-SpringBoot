@@ -2,9 +2,11 @@ package com.edgaritzak.imageBoard.service;
 
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 
@@ -31,18 +33,18 @@ public class GoogleDriveAPIService {
   private String FOLDER_ID;
 
   private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-  // private static final String CREDENTIALS_JSON_PATH = new ClassPathResource("credentials.json").toString();
-  private ClassPathResource CREDENTIALS_JSON_PATH = new ClassPathResource("credentials.json");
-  // private static final String CREDENTIALS_JSON_PATH = Paths.get(System.getProperty("user.dir"), "credentials.json").toString();
+  //private ClassPathResource CREDENTIALS_JSON_PATH = new ClassPathResource("credentials.json"); //USING JAR FILE
+  private static final String CREDENTIALS_JSON_PATH = Paths.get(System.getProperty("user.dir"),"/src/main/resources", "credentials.json").toString();
 
   /*
    *  GET GOOGLE DRIVE INSTANCE
    */
   public Drive getDriveInstance() throws IOException, GeneralSecurityException, FileNotFoundException{
+    System.out.println("CREDENTIALS PATH:"+CREDENTIALS_JSON_PATH);
     NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
 
-    InputStream credentialsStream = CREDENTIALS_JSON_PATH.getInputStream();
-    // FileInputStream credentialsStream = new FileInputStream(CREDENTIALS_JSON_PATH);
+    //InputStream credentialsStream = CREDENTIALS_JSON_PATH.getInputStream(); //USING JAR FILE
+    FileInputStream credentialsStream = new FileInputStream(CREDENTIALS_JSON_PATH);
     GoogleCredentials credentials = GoogleCredentials.fromStream(credentialsStream).createScoped(Collections.singleton(DriveScopes.DRIVE));
 
     return new Drive(HTTP_TRANSPORT, JSON_FACTORY, new HttpCredentialsAdapter(credentials));

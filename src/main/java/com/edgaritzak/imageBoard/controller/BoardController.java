@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -102,8 +103,9 @@ public class BoardController {
 
 	
 	@PostMapping("/deletePost")
+	@PreAuthorize("isAuthenticated()")
 	public String postMethodName(@RequestParam("postId") Long postId, @RequestParam("boardCode") String boardCode) {
-
+		System.out.println("DELETING POST:"+postId);
 		threadService.deletePost(postId);
 		return "redirect:/"+boardCode+"/";
 	}
@@ -119,6 +121,7 @@ public class BoardController {
 	}
 
 	@PostMapping("/admin/board/addBoard")
+	@PreAuthorize("isAuthenticated()")
 	public String addBoard(@Valid @ModelAttribute Board board, Model model) {
 		
 		List<String> bannedCodeNames = List.of("login", "logout", "error", "about", "admin", "image", "static");
@@ -141,6 +144,7 @@ public class BoardController {
 	}
 
 	@PostMapping("/admin/board/updateBoard")
+	@PreAuthorize("isAuthenticated()")
 	public String updateBoard(@Valid @ModelAttribute Board board, Model model) {
 
 		List<String> bannedCodeNames = List.of("login", "logout", "error", "about", "admin", "image", "static");
@@ -155,6 +159,7 @@ public class BoardController {
 	}
 
 	@PostMapping("/admin/board/deleteBoard/{boardId}")
+	@PreAuthorize("isAuthenticated()")
 	public String deleteBoard(@PathVariable Long boardId) {
 		boardService.deleteBoard(boardId);
 		return "redirect:/admin/board";

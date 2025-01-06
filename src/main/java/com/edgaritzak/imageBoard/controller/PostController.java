@@ -1,6 +1,5 @@
 package com.edgaritzak.imageBoard.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -15,9 +14,9 @@ import com.edgaritzak.imageBoard.service.BoardService;
 import com.edgaritzak.imageBoard.service.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,14 +52,27 @@ public class PostController {
 	@RequestMapping("/static/**")
   @ResponseBody
 	public ResponseEntity<?>  obtenerArchivo(HttpServletRequest request) {
-			String archivoPath = request.getRequestURI().substring("/static".length());
-			// File archivo = new File("src/main/resources/static/" + archivoPath);
-			ClassPathResource archivo = new ClassPathResource("static" + archivoPath);
-			String contentType = "text/css";
+		String archivoPath = request.getRequestURI().substring("/static".length());
 
-			return ResponseEntity.ok()
-                .header("Content-Type", contentType) // Configura el tipo de contenido adecuado
-                .body(archivo);
+		// File archivo = new File("src/main/resources/static" + archivoPath); //UNUSED
+		try {
+			Path cssPath = Paths.get("src/main/resources/static"+archivoPath);
+			byte[] cssContent = Files.readAllBytes(cssPath);
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.valueOf("text/css"));
+			return new ResponseEntity<>(cssContent, headers, HttpStatus.OK);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ResponseEntity.notFound().build();
+		}
+
+		//ClassPathResource archivo = new ClassPathResource("static" + archivoPath); //JAR FILE
+		// String contentType = "text/css";
+
+		// return ResponseEntity.ok()
+		// 					.header("Content-Type", contentType)
+		// 					.body(archivo);
 	}
 
 	@GetMapping("/favicon.ico")
