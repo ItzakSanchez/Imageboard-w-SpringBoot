@@ -54,7 +54,6 @@ public class PostController {
 	public ResponseEntity<?>  obtenerArchivo(HttpServletRequest request) {
 		String archivoPath = request.getRequestURI().substring("/static".length());
 
-		// File archivo = new File("src/main/resources/static" + archivoPath); //UNUSED
 		try {
 			Path cssPath = Paths.get("src/main/resources/static"+archivoPath);
 			byte[] cssContent = Files.readAllBytes(cssPath);
