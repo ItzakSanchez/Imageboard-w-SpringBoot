@@ -16,7 +16,9 @@ Welcome to **Digital World**, an imageboard created to share anonymously with ot
 ## Project Structure
 
 ## Authors and Acknowledgments
+Designed and developed by Edgar Itzak Sanchez Rogers
 
 ## Project Status
-
+## Screenshots
 ## Contact
+My email: edgaritzak@outlook.com
