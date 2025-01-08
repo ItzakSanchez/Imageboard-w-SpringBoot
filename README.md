@@ -16,9 +16,23 @@ Welcome to **Digital World**, an imageboard created to share anonymously with ot
 ## Project Structure
 ```
 src/
-| main/java/ - Java Source code
-| main/resources/ - Archivos de configuración (como application.properties)
-pom.xml - Dependencias y configuraciones del proyecto 
+| main
+| | java/ - Java Source code
+| | resources/
+| | | static/
+| | | | css/
+| | | | images/
+| | | | | icons/
+| | | | | pictures/
+| | | templates/
+| | | | error/
+| | | | | error.html - error templates
+| | | | templates.html - Thymeleaf templates 
+| | | SQL/
+| | | | schema.sql
+| | | credentials.json - Credentials for Google Drive API
+| | | application.propperties
+pom.xml - Project dependencies and configurations 
 ```
 ## Authors and Acknowledgments
 Designed and developed by Edgar Itzak Sanchez Rogers
