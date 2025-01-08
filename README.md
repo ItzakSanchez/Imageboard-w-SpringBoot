@@ -14,7 +14,12 @@ Welcome to **Digital World**, an imageboard created to share anonymously with ot
 ### Usage
 
 ## Project Structure
-
+```
+src/
+| main/java/ - Java Source code
+| main/resources/ - Archivos de configuración (como application.properties)
+pom.xml - Dependencias y configuraciones del proyecto 
+```
 ## Authors and Acknowledgments
 Designed and developed by Edgar Itzak Sanchez Rogers
 
