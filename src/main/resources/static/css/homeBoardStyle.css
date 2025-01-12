@@ -1,5 +1,5 @@
-.roboto-mono-text {
-  
+body{
+  width:100%
 }
 
 /* nav{
@@ -77,8 +77,29 @@ table, td ,th{
   color: white;
 }
 
+.mainForm{
+  max-width: 470px;
+  margin: auto
+}
 
+table{
+  width: 100%;
+}
+/* tr{
+  max-width: 90%;
+}
+td{
+  width: 100px;
+} */
 textarea{
   width: 100%;
   height: 120px;
 }
+input{
+  width: 100%;
+}
+
+/* table, tbody, tr, form, td, textarea, input{
+  width: 70%;
+  margin: 0;
+} */

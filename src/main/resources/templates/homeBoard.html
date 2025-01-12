@@ -51,8 +51,8 @@
 <!-- FORM -->
 <!-- FORM -->
  
-  <div class="container d-flex justify-content-center">
-    <form action="#" th:action="@{/uploadThread}" method="post" enctype="multipart/form-data" class="form">
+  <div class="container" style="max-width: 90%;">
+    <form action="#" th:action="@{/uploadThread}" method="post" enctype="multipart/form-data" class="mainForm">
       <input type="hidden" th:value="${board.id}" name="boardId" id="boardId">
   
       <table>
@@ -75,15 +75,16 @@
         </tr>
         <tr>
           <td><label for="upload">Upload</label></td>
-          <td><button type="submit">Upload New Thread</button>
-          </td>
+          <td><button type="submit">Upload New Thread</button></td>
         </tr>
       </table>
     </form>
   </div>
   <br>
-  <div class="d-flex justify-content-center">
-    <img src="/images/pictures/banner.gif" style="max-height: 200px;">
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <img src="/images/pictures/banner.gif" style="max-height: 180px; max-width: 98%;">
+    </div>  
   </div>
 
 <!-- RENDER THREADS -->
@@ -101,8 +102,7 @@
       <div class="container d-flex flex-wrap">
         <div th:each="filename:${thread.threadDTO.mediaFilenames}" class="mx-2">
           <a th:href="@{https://drive.google.com/file/d/{filename}/view (filename = ${filename})}" target="_blank" th:text=${#strings.abbreviate(filename,20)} th:title="${filename}"></a><br>
-          <img th:src="${'https://drive.google.com/thumbnail?id='+filename+'&sz=w270'}">
-
+          <img th:src="${'https://drive.google.com/thumbnail?id='+filename+'&sz=w270'}">  
 
         </div>
       </div>
