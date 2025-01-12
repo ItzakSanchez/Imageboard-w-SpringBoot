@@ -50,8 +50,8 @@
   <!-- FORM -->
   <!-- FORM -->
   <!-- FORM -->
-  <div class="container d-flex justify-content-center">
-    <form action="#" th:action="@{/uploadReply}" method="post" enctype="multipart/form-data">
+  <div class="container" style="max-width: 90%;">
+    <form action="#" th:action="@{/uploadReply}" method="post" enctype="multipart/form-data" class="mainForm">
       <input type="hidden" th:value="${thread.threadDTO.id}" name="threadId" id="threadId">
       <table>
         <tr>
@@ -67,7 +67,7 @@
           <td><input type="file" name="images" id="images" multiple></td>
         </tr>
         <tr>
-          <td>Upload reply</td>
+          <td>Reply</td>
           <td><button type="submit">Reply</button>
           </td>
         </tr>
@@ -75,7 +75,14 @@
     </form>
   </div>
   <br>
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <img src="/images/pictures/banner.gif" style="max-height: 180px; max-width: 98%;">
+    </div>
+  </div>
+
   <hr>
+
 
   <!-- RENDER THREAD -->
   <!-- RENDER THREAD -->

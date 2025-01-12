@@ -55,7 +55,7 @@ public class PostController {
 		String archivoPath = request.getRequestURI().substring("/static".length());
 
 		// File archivo = new File("src/main/resources/static" + archivoPath); //UNUSED
-		try {
+		try { //DEV
 			Path cssPath = Paths.get("src/main/resources/static"+archivoPath);
 			byte[] cssContent = Files.readAllBytes(cssPath);
 			HttpHeaders headers = new HttpHeaders();
